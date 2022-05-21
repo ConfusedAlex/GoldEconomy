@@ -1,0 +1,4 @@
+name: GoldEconomy
+version: '${project.version}'
+main: confusedserver.goldeconomy.GoldEconomy
+api-version: 1.18
