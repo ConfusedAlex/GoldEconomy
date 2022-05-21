@@ -1,0 +1,12 @@
+bank {
+    balance {
+        help show your balance
+        user player
+        hook balance
+    }
+
+    setbalance double:arg {
+        help sets balace
+        hook setbalance
+    }
+}

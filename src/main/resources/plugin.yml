@@ -1,4 +1,5 @@
 name: GoldEconomy
 version: '${project.version}'
-main: confusedserver.goldeconomy.GoldEconomy
+main: confusedalex.goldeconomy.GoldEconomy
 api-version: 1.18
+depend: [Vault]
