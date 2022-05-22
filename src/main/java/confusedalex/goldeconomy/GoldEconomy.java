@@ -3,13 +3,12 @@ package confusedalex.goldeconomy;
 import de.leonhard.storage.Json;
 import de.leonhard.storage.Yaml;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import redempt.redlib.commandmanager.CommandParser;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public final class GoldEconomy extends JavaPlugin {
     private final Json balanceFile = new Json("balance.json", getDataFolder() + "/data/");
@@ -20,9 +19,17 @@ public final class GoldEconomy extends JavaPlugin {
     private EconomyImplementer economyImplementer;
     private VaultHook vaultHook;
     private Converter converter;
+    private ResourceBundle bundle;
 
     @Override
     public void onEnable() {
+        // Language check
+        Bukkit.getConsoleSender().sendMessage(configFile.getString("language"));
+        if ("de_DE".equals(configFile.getString("language"))) {
+            bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
+        } else {
+            bundle = ResourceBundle.getBundle("messages", Locale.US);
+        }
 
         // Vault shit
         economyImplementer = new EconomyImplementer(this);
@@ -108,7 +115,16 @@ public final class GoldEconomy extends JavaPlugin {
     public Converter getConverter(){
         return converter;
     }
+
     public Yaml getConfigFile(){
         return configFile;
+    }
+
+    public ResourceBundle getBundle() {
+        return bundle;
+    }
+
+    public void sendMessage(String message, Player player){
+        player.sendMessage(ChatColor.GOLD + "[GoldEconomy] " + ChatColor.WHITE + ChatColor.translateAlternateColorCodes('&', message));
     }
 }

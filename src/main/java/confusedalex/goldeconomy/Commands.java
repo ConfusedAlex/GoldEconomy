@@ -3,28 +3,30 @@ package confusedalex.goldeconomy;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.TownBlockType;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import redempt.redlib.commandmanager.CommandHook;
 
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class Commands {
     GoldEconomy plugin;
     Converter converter;
+    ResourceBundle bundle;
 
 
     public Commands(GoldEconomy plugin) {
         this.plugin = plugin;
         converter = plugin.getConverter();
+        bundle = plugin.getBundle();
     }
 
     public boolean isBankingRestrictedToPlot(Player player){
         if (plugin.getConfigFile().getBoolean("restrictToBankPlot")){
             if (TownyAPI.getInstance().getTownBlock(player.getLocation()) == null || !TownyAPI.getInstance().getTownBlock(player.getLocation()).getType().equals(TownBlockType.BANK)){
-                player.sendMessage("You have to be on a Bank Plot to use this command!");
+                plugin.sendMessage(bundle.getString("error.bankplot"), player);
                 return true;
             }
         }
@@ -35,7 +37,7 @@ public class Commands {
     public void balance(CommandSender commandSender) {
         Player player = (Player) commandSender;
         String uuid = player.getUniqueId().toString();
-        player.sendMessage("You have a total of " + ChatColor.GOLD + plugin.getBalance(uuid) + " Gold. " + plugin.getPlayerBank().get(uuid) + ChatColor.WHITE + " on the bank and " + ChatColor.GOLD + converter.getInventoryValue(player) + ChatColor.WHITE + " on hand." );
+        plugin.sendMessage(String.format(bundle.getString("info.balance"), plugin.getBalance(uuid), plugin.getPlayerBank().get(uuid), converter.getInventoryValue(player)), player);
     }
 
     @CommandHook("pay")
@@ -47,22 +49,22 @@ public class Commands {
         if (isBankingRestrictedToPlot(sender)) return;
 
         if (target == null){
-        commandSender.sendMessage("No player found!");
+        plugin.sendMessage(bundle.getString("error.noplayer"), sender);
             return;
         } else if (amount > plugin.getBalance(senderuuid)) {
             return;
         } else if (senderuuid.equals(target.getUniqueId().toString())){
-            sender.sendMessage("You cannot send money to yourself!");
+            plugin.sendMessage(bundle.getString("error.payyourself"), sender);
             return;
         }
 
-        plugin.setBalances(senderuuid, (plugin.getBalance(senderuuid) - amount));
-        sender.sendMessage("You've sent " + ChatColor.GOLD + amount + " Gold" + ChatColor.WHITE + " to " + target.getName());
+        plugin.getEconomyImplementer().withdrawPlayer(sender, amount);
+        plugin.sendMessage(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
         if (target.isOnline()) {
-            Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())).sendMessage(("You've received " + ChatColor.GOLD + amount + " Gold" + ChatColor.WHITE + " from " + sender.getName()));
+            plugin.sendMessage(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
             plugin.setBalances(target.getUniqueId().toString(), plugin.getBalance(senderuuid) + amount);
         } else {
-            plugin.getBalanceFile().set(target.getUniqueId().toString(), plugin.getBalance(senderuuid) + amount);
+            plugin.getEconomyImplementer().depositPlayer(target, plugin.getBalance(senderuuid) + amount);
         }
     }
 
@@ -86,9 +88,9 @@ public class Commands {
         if (isBankingRestrictedToPlot(player)) return;
 
         if (nuggets == null){
-            commandSender.sendMessage("Do you really want to withdraw all your gold from your bank?");
-            commandSender.sendMessage("Gold that doesn't fit into your inventory will be dropped!");
-            commandSender.sendMessage("Type " + ChatColor.AQUA +  "/bank withdraw confirm" + ChatColor.WHITE + " to withdraw all your money");
+            plugin.sendMessage(bundle.getString("conformation.withdrawall"), player);
+            plugin.sendMessage(bundle.getString("warning.golddropped"), player);
+            plugin.sendMessage(bundle.getString("confirm.withdrawall"), player);
             return;
         } else if (nuggets.equals("confirm")) {
             converter.withdrawAll((Player) commandSender);

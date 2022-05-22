@@ -118,7 +118,6 @@ public class Converter {
             value = value + (getValue(material) * item.getAmount());
             item.setAmount(0);
             item.setType(Material.AIR);
-
         }
 
         plugin.getEconomyImplementer().depositPlayer(op, value);
