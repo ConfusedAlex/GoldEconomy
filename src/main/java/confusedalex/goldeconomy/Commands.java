@@ -1,9 +1,13 @@
 package confusedalex.goldeconomy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import redempt.redlib.commandmanager.CommandHook;
+
+import java.util.Objects;
 
 public class Commands {
     GoldEconomy plugin;
@@ -16,9 +20,35 @@ public class Commands {
     }
 
     @CommandHook("balance")
-    public void balance(CommandSender commandSender){
+    public void balance(CommandSender commandSender) {
         Player player = (Player) commandSender;
-        player.sendMessage("Your balance is: " + plugin.getBalance(player.getUniqueId().toString()));
+        player.sendMessage("Your have " + ChatColor.GOLD + plugin.getBalance(player.getUniqueId().toString()) + ChatColor.WHITE + " Gold on the Bank and " + ChatColor.GOLD + converter.getInventoryValue(player) + ChatColor.WHITE + " on hand.");
+    }
+
+    @CommandHook("pay")
+    public void pay(CommandSender commandSender, String sTarget, int amount) {
+        Player sender = (Player) commandSender;
+        String senderuuid = sender.getUniqueId().toString();
+        OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(sTarget);
+
+        if (target == null){
+            commandSender.sendMessage("Player not found!");
+            return;
+        } else if (amount > plugin.getBalance(senderuuid)) {
+            return;
+        } else if (senderuuid.equals(target.getUniqueId().toString())){
+            sender.sendMessage("You cannot send money to yourself!");
+            return;
+        }
+
+        plugin.setBalances(senderuuid, (plugin.getBalance(senderuuid) - amount));
+        sender.sendMessage("You've sent " + ChatColor.GOLD + amount + " Gold" + ChatColor.WHITE + " to " + target.getName());
+        if (target.isOnline()) {
+            Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())).sendMessage(("You've received " + ChatColor.GOLD + amount + " Gold" + ChatColor.WHITE + " from " + sender.getName()));
+            plugin.setBalances(target.getUniqueId().toString(), plugin.getBalance(senderuuid) + amount);
+        } else {
+            plugin.getBalanceFile().set(target.getUniqueId().toString(), plugin.getBalance(senderuuid) + amount);
+        }
     }
 
     @CommandHook("deposit")

@@ -33,6 +33,22 @@ public class Converter {
         }
     }
 
+    public int getInventoryValue(Player player){
+        int value = 0;
+
+        // calculating the value of all the gold in the inventory to nuggets
+        for (ItemStack item : player.getInventory()) {
+            if (item == null) continue;
+            Material material = item.getType();
+
+            if (!isGold(material)) continue;
+
+            value += (getValue(material) * item.getAmount());
+
+        }
+        return value;
+    }
+
     public void withdrawAll(Player player){
         OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
         int value = plugin.getPlayerBank().get(player.getUniqueId().toString());

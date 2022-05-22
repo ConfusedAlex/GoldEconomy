@@ -17,4 +17,10 @@ bank {
         hook withdraw
         user player
     }
+
+    pay string:arg int:arg {
+        help pay a player money
+        hook pay
+        user player
+    }
 }
