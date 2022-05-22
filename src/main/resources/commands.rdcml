@@ -5,20 +5,20 @@ bank {
         hook balance
     }
 
-    deposit string:arg? {
+    deposit string:arg?* {
         help deposits money
         hook deposit
         user player
 
     }
 
-    withdraw string:arg? {
+    withdraw string:arg?* {
         help withdraws money
         hook withdraw
         user player
     }
 
-    pay string:arg int:arg {
+    pay offlinePlayer:target int:gold* {
         help pay a player money
         hook pay
         user player

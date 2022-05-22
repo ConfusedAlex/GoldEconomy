@@ -8,8 +8,8 @@ import org.bukkit.plugin.ServicePriority;
 import static java.util.logging.Level.INFO;
 
 public class VaultHook {
-    private final GoldEconomy plugin;
-    private Economy provider;
+    GoldEconomy plugin;
+    Economy provider;
 
     public VaultHook(GoldEconomy plugin, Economy provider) {
         this.plugin = plugin;
@@ -17,7 +17,6 @@ public class VaultHook {
     }
 
     public void hook(){
-        provider = plugin.getEconomyImplementer();
         Bukkit.getServicesManager().register(Economy.class, this.provider, plugin, ServicePriority.Normal);
         plugin.getLogger().log(INFO, ChatColor.GREEN + "VaultAPI hooked into " + ChatColor.AQUA + plugin.getName());
     }

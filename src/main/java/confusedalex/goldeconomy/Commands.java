@@ -2,6 +2,8 @@ package confusedalex.goldeconomy;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.TownBlockType;
+import de.leonhard.storage.Yaml;
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -13,19 +15,20 @@ import java.util.ResourceBundle;
 
 public class Commands {
     GoldEconomy plugin;
-    Converter converter;
     ResourceBundle bundle;
+    EconomyImplementer eco;
+    Yaml configFile;
 
-
-    public Commands(GoldEconomy plugin) {
+    public Commands(GoldEconomy plugin, ResourceBundle bundle, EconomyImplementer eco, Yaml configFile) {
         this.plugin = plugin;
-        converter = plugin.getConverter();
-        bundle = plugin.getBundle();
+        this.bundle = bundle;
+        this.eco = eco;
+        this.configFile = configFile;
     }
 
     public boolean isBankingRestrictedToPlot(Player player){
-        if (plugin.getConfigFile().getBoolean("restrictToBankPlot")){
-            if (TownyAPI.getInstance().getTownBlock(player.getLocation()) == null || !TownyAPI.getInstance().getTownBlock(player.getLocation()).getType().equals(TownBlockType.BANK)){
+        if (configFile.getBoolean("restrictToBankPlot")) {
+            if (TownyAPI.getInstance().getTownBlock(player.getLocation()) == null || !Objects.requireNonNull(TownyAPI.getInstance().getTownBlock(player.getLocation())).getType().equals(TownBlockType.BANK)){
                 plugin.sendMessage(bundle.getString("error.bankplot"), player);
                 return true;
             }
@@ -37,34 +40,34 @@ public class Commands {
     public void balance(CommandSender commandSender) {
         Player player = (Player) commandSender;
         String uuid = player.getUniqueId().toString();
-        plugin.sendMessage(String.format(bundle.getString("info.balance"), plugin.getBalance(uuid), plugin.getPlayerBank().get(uuid), converter.getInventoryValue(player)), player);
+        plugin.sendMessage(String.format(bundle.getString("info.balance"), (int) eco.getBalance(uuid), eco.bank.getPlayerBank().get(uuid), eco.converter.getInventoryValue(player)), player);
     }
 
     @CommandHook("pay")
-    public void pay(CommandSender commandSender, String sTarget, int amount) {
+    public void pay(CommandSender commandSender, OfflinePlayer target, int amount) {
         Player sender = (Player) commandSender;
         String senderuuid = sender.getUniqueId().toString();
-        OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(sTarget);
+        String targetuuid = target.getUniqueId().toString();
 
         if (isBankingRestrictedToPlot(sender)) return;
 
         if (target == null){
         plugin.sendMessage(bundle.getString("error.noplayer"), sender);
             return;
-        } else if (amount > plugin.getBalance(senderuuid)) {
+        } else if (amount > eco.bank.getBalance(senderuuid)) {
             return;
-        } else if (senderuuid.equals(target.getUniqueId().toString())){
+        } else if (senderuuid.equals(targetuuid)){
             plugin.sendMessage(bundle.getString("error.payyourself"), sender);
             return;
         }
 
-        plugin.getEconomyImplementer().withdrawPlayer(sender, amount);
+        eco.withdrawPlayer(sender, amount);
         plugin.sendMessage(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
         if (target.isOnline()) {
             plugin.sendMessage(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
-            plugin.setBalances(target.getUniqueId().toString(), plugin.getBalance(senderuuid) + amount);
+            eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getBalance(senderuuid) + amount);
         } else {
-            plugin.getEconomyImplementer().depositPlayer(target, plugin.getBalance(senderuuid) + amount);
+            eco.depositPlayer(target, eco.bank.getBalance(senderuuid) + amount);
         }
     }
 
@@ -75,28 +78,31 @@ public class Commands {
         if (isBankingRestrictedToPlot(player)) return;
 
         if (nuggets == null){
-            converter.depositAll((Player) commandSender);
+            eco.converter.depositAll((Player) commandSender);
             return;
         }
-        converter.deposit((Player) commandSender, Integer.parseInt(nuggets));
+        eco.converter.deposit((Player) commandSender, Integer.parseInt(nuggets));
     }
 
     @CommandHook("withdraw")
     public void withdraw(CommandSender commandSender, String nuggets){
         Player player = (Player) commandSender;
 
-        if (isBankingRestrictedToPlot(player)) return;
+        if (isBankingRestrictedToPlot(player)) {
+            return;
+        }
 
-        if (nuggets == null){
+        if (nuggets == null) {
             plugin.sendMessage(bundle.getString("conformation.withdrawall"), player);
             plugin.sendMessage(bundle.getString("warning.golddropped"), player);
             plugin.sendMessage(bundle.getString("confirm.withdrawall"), player);
-            return;
         } else if (nuggets.equals("confirm")) {
-            converter.withdrawAll((Player) commandSender);
-            return;
+            eco.converter.withdrawAll((Player) commandSender);
+        } else if (!NumberUtils.isNumber(nuggets)) {
+        } else {
+            eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
         }
-        converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
+
     }
 }
 

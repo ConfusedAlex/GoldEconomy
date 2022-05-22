@@ -8,10 +8,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class Converter {
 
-    GoldEconomy plugin;
+    EconomyImplementer eco;
 
-    public Converter(GoldEconomy plugin) {
-        this.plugin = plugin;
+    public Converter(EconomyImplementer economyImplementer) {
+        this.eco = economyImplementer;
     }
 
     public int getValue(Material material) {
@@ -22,14 +22,14 @@ public class Converter {
         return 0;
     }
 
-    public boolean isGold(Material material) {
+    public boolean isNotGold(Material material) {
         switch(material) {
             case GOLD_BLOCK:
             case GOLD_INGOT:
             case GOLD_NUGGET:
-                return true;
-            default:
                 return false;
+            default:
+                return true;
         }
     }
 
@@ -41,7 +41,7 @@ public class Converter {
             if (item == null) continue;
             Material material = item.getType();
 
-            if (!isGold(material)) continue;
+            if (isNotGold(material)) continue;
 
             value += (getValue(material) * item.getAmount());
 
@@ -50,7 +50,6 @@ public class Converter {
     }
 
     public void remove(Player player, int amount){
-        OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
         int value = 0;
 
         // calculating the value of all the gold in the inventory to nuggets
@@ -58,7 +57,7 @@ public class Converter {
             if (item == null) continue;
             Material material = item.getType();
 
-            if (!isGold(material)) continue;
+            if (isNotGold(material)) continue;
 
             value += (getValue(material) * item.getAmount());
 
@@ -70,7 +69,7 @@ public class Converter {
         // Deletes all gold items
         for (ItemStack item : player.getInventory()) {
             if (item == null) continue;
-            if (!isGold(item.getType())) continue;
+            if (isNotGold(item.getType())) continue;
 
             item.setAmount(0);
             item.setType(Material.AIR);
@@ -89,17 +88,21 @@ public class Converter {
     }
 
     public void withdrawAll(Player player){
-        OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
-        int value = plugin.getPlayerBank().get(player.getUniqueId().toString());
-        plugin.getEconomyImplementer().withdrawPlayer(op, value);
+        String uuid = player.getUniqueId().toString();
+
+        // searches in the Database for the balance, so that a player can't withdraw gold from his Inventory
+        int value = eco.bank.getBalance(player.getUniqueId().toString());
+        eco.bank.setBalance(uuid, (0));
 
         give(player, value);
     }
 
     public void withdraw(Player player, int nuggets){
-        OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
-        if (nuggets > plugin.getPlayerBank().get(player.getUniqueId().toString())) return;
-        plugin.getEconomyImplementer().withdrawPlayer(op, nuggets);
+        String uuid = player.getUniqueId().toString();
+        int oldbalance = eco.bank.getPlayerBank().get(uuid);
+
+        if (nuggets > eco.bank.getBalance(player.getUniqueId().toString())) return;
+        eco.bank.setBalance(uuid, (oldbalance - nuggets));
 
         give(player, nuggets);
 
@@ -113,14 +116,14 @@ public class Converter {
             if (item == null) continue;
             Material material = item.getType();
 
-            if (!isGold(material)) continue;
+            if (isNotGold(material)) continue;
 
             value = value + (getValue(material) * item.getAmount());
             item.setAmount(0);
             item.setType(Material.AIR);
         }
 
-        plugin.getEconomyImplementer().depositPlayer(op, value);
+        eco.depositPlayer(op, value);
 
     }
 
@@ -128,6 +131,6 @@ public class Converter {
         OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
 
         remove(player, nuggets);
-        plugin.getEconomyImplementer().depositPlayer(op, nuggets);
+        eco.depositPlayer(op, nuggets);
     }
 }

@@ -7,30 +7,32 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 
 public class Events implements org.bukkit.event.Listener {
-    GoldEconomy goldEconomy;
+    GoldEconomy plugin;
+    Bank bank;
 
-    public Events(GoldEconomy goldEconomy) {
-        this.goldEconomy = goldEconomy;
+    public Events(GoldEconomy plugin, Bank bank) {
+        this.plugin = plugin;
+        this.bank = bank;
     }
 
     @EventHandler
     public void onPlayerJoining(PlayerJoinEvent e) {
         String uuid = e.getPlayer().getUniqueId().toString();
-        Json balanceFile = goldEconomy.getBalanceFile();
+        Json balanceFile = bank.getBalanceFile();
 
         if (!balanceFile.contains(uuid)) {
             balanceFile.set(uuid, 0);
         }
 
-        goldEconomy.setBalances(uuid, balanceFile.getInt(uuid));
+        bank.getPlayerBank().put(uuid, balanceFile.getInt(uuid));
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         String uuid = e.getPlayer().getUniqueId().toString();
 
-        goldEconomy.getBalanceFile().set(uuid, goldEconomy.getPlayerBank().get(uuid));
-        goldEconomy.getPlayerBank().remove(uuid);
+        bank.getBalanceFile().set(uuid, bank.getPlayerBank().get(uuid));
+        bank.getPlayerBank().remove(uuid);
     }
 
 }
