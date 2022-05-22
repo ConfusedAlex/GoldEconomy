@@ -4,6 +4,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -130,21 +131,38 @@ public class EconomyImplementer implements Economy {
     @Override
     public EconomyResponse withdrawPlayer(String s, double v) {
         EconomyResponse response;
-        OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(s);
-       if (player != null){
-           String uuid = player.getUniqueId().toString();
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(s);
+        Player player;
+        int oldBalance = 0;
 
-           int oldBalance = plugin.getPlayerBank().get(uuid);
-           int newBalance = (int) (oldBalance - v);
+        // if < 0 return
+        if (v < 0) return new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
-           if (v < 0){
-               response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+        if (offlinePlayer != null){
+           String uuid = offlinePlayer.getUniqueId().toString();
+           if (offlinePlayer.isOnline()){
+               player = offlinePlayer.getPlayer();
+
+               int oldBankBalance = plugin.getPlayerBank().get(uuid);
+               int oldInventoryBalance = plugin.getConverter().getInventoryValue(player);
+               if (v > oldBankBalance + oldInventoryBalance) return new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+               if (oldBankBalance - v > 0){
+                   response = new EconomyResponse(v, (oldBankBalance - v), EconomyResponse.ResponseType.SUCCESS, "");
+                   plugin.setBalance(uuid, (int) (oldBankBalance - v));
+               } else {
+                   int diff = (int) (v - oldBankBalance);
+                   plugin.setBalance(uuid, 0);
+                   plugin.getConverter().remove(player, diff);
+                   return new EconomyResponse(v, oldInventoryBalance - v, EconomyResponse.ResponseType.SUCCESS, "");
+               }
            } else {
+               oldBalance = plugin.getPlayerBank().get(uuid);
+               int newBalance = (int) (oldBalance - v);
                response = new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
-               plugin.getPlayerBank().put(uuid, newBalance);
+               plugin.setBalance(uuid, newBalance);
            }
-       } else {
-           int oldBalance = plugin.getBalance(s);
+        } else {
+           oldBalance = plugin.getBalance(s);
            int newBalance = (int) (oldBalance - v);
 
            if (v > 0) {
@@ -153,45 +171,79 @@ public class EconomyImplementer implements Economy {
            } else {
                response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
            }
-       }
+        }
         return response;
     }
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double v) {
-        EconomyResponse response;
         String uuid = offlinePlayer.getUniqueId().toString();
-        int oldBalance = plugin.getPlayerBank().get(uuid);
-        int newBalance = (int) (oldBalance - v);
+        Player player;
+        int oldBalance = 0;
 
         if (v < 0){
-            response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
-        } else {
-            response = new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
-            plugin.getPlayerBank().put(uuid, newBalance);
+            return new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
         }
 
-        return response;
+        if (offlinePlayer.isOnline()) {
+            player = offlinePlayer.getPlayer();
+
+            int oldBankBalance = plugin.getBalance(uuid);
+            int oldInventoryBalance = plugin.getConverter().getInventoryValue(player);
+            if (v > oldBankBalance + oldInventoryBalance)
+                return new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+            if (oldBankBalance - v > 0) {
+                plugin.setBalance(uuid, (int) (oldBankBalance - v));
+                return new EconomyResponse(v, (oldBankBalance - v), EconomyResponse.ResponseType.SUCCESS, "");
+            } else {
+                int diff = (int) (v - oldBankBalance);
+                plugin.setBalance(uuid, 0);
+                plugin.getConverter().remove(player, diff);
+                return new EconomyResponse(v, oldInventoryBalance - v, EconomyResponse.ResponseType.SUCCESS, "");
+            }
+        } else {
+            oldBalance = plugin.getBalance(uuid);
+            int newBalance = (int) (oldBalance - v);
+            plugin.setBalance(uuid, newBalance);
+            return new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
+        }
     }
 
     @Override
     public EconomyResponse withdrawPlayer(String s, String s1, double v) {
         EconomyResponse response;
-        OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(s);
-        if (player != null){
-            String uuid = player.getUniqueId().toString();
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(s);
+        Player player;
+        int oldBalance = 0;
 
-            int oldBalance = plugin.getPlayerBank().get(uuid);
-            int newBalance = (int) (oldBalance - v);
+        // if < 0 return
+        if (v < 0) return new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
-            if (v < 0){
-                response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+        if (offlinePlayer != null){
+            String uuid = offlinePlayer.getUniqueId().toString();
+            if (offlinePlayer.isOnline()){
+                player = offlinePlayer.getPlayer();
+
+                int oldBankBalance = plugin.getPlayerBank().get(uuid);
+                int oldInventoryBalance = plugin.getConverter().getInventoryValue(player);
+                if (v > oldBankBalance + oldInventoryBalance) return new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+                if (oldBankBalance - v > 0){
+                    response = new EconomyResponse(v, (oldBankBalance - v), EconomyResponse.ResponseType.SUCCESS, "");
+                    plugin.setBalance(uuid, (int) (oldBankBalance - v));
+                } else {
+                    int diff = (int) (v - oldBankBalance);
+                    plugin.setBalance(uuid, 0);
+                    plugin.getConverter().remove(player, diff);
+                    return new EconomyResponse(v, oldInventoryBalance - v, EconomyResponse.ResponseType.SUCCESS, "");
+                }
             } else {
+                oldBalance = plugin.getPlayerBank().get(uuid);
+                int newBalance = (int) (oldBalance - v);
                 response = new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
-                plugin.getPlayerBank().put(uuid, newBalance);
+                plugin.setBalance(uuid, newBalance);
             }
         } else {
-            int oldBalance = plugin.getBalance(s);
+            oldBalance = plugin.getBalance(s);
             int newBalance = (int) (oldBalance - v);
 
             if (v > 0) {
@@ -205,20 +257,33 @@ public class EconomyImplementer implements Economy {
     }
 
     @Override
-    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String s, double v) {
-        EconomyResponse response;
+    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String s, double v){
         String uuid = offlinePlayer.getUniqueId().toString();
-        int oldBalance = plugin.getPlayerBank().get(uuid);
-        int newBalance = (int) (oldBalance - v);
+            Player player;
+            int oldBalance = 0;
 
-        if (v < 0){
-            response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+        if (offlinePlayer.isOnline()) {
+            player = offlinePlayer.getPlayer();
+
+            int oldBankBalance = plugin.getPlayerBank().get(uuid);
+            int oldInventoryBalance = plugin.getConverter().getInventoryValue(player);
+            if (v > oldBankBalance + oldInventoryBalance)
+                return new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+            if (oldBankBalance - v > 0) {
+                plugin.setBalance(uuid, (int) (oldBankBalance - v));
+                return new EconomyResponse(v, (oldBankBalance - v), EconomyResponse.ResponseType.SUCCESS, "");
+            } else {
+                int diff = (int) (v - oldBankBalance);
+                plugin.setBalance(uuid, 0);
+                plugin.getConverter().remove(player, diff);
+                return new EconomyResponse(v, oldInventoryBalance - v, EconomyResponse.ResponseType.SUCCESS, "");
+            }
         } else {
-            response = new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
-            plugin.getPlayerBank().put(uuid, newBalance);
+            oldBalance = plugin.getPlayerBank().get(uuid);
+            int newBalance = (int) (oldBalance - v);
+            plugin.setBalance(uuid, newBalance);
+            return new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
         }
-
-        return response;
     }
 
     @Override

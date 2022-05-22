@@ -7,6 +7,8 @@ import redempt.redlib.commandmanager.CommandParser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public final class GoldEconomy extends JavaPlugin {
     private final Json balanceFile = new Json("balance.json", getDataFolder().toString());
@@ -56,7 +58,7 @@ public final class GoldEconomy extends JavaPlugin {
     }
 
     public int getBalance(String uuid){
-        if (playerBank.containsKey(uuid)) return playerBank.get(uuid);
+        if (playerBank.containsKey(uuid)) return playerBank.get(uuid) + converter.getInventoryValue(Objects.requireNonNull(Bukkit.getPlayer(UUID.fromString(uuid))));
         if (balanceFile.contains(uuid)) return balanceFile.getInt(uuid);
         if (fakeAccounts.containsKey(uuid)) return fakeAccounts.get(uuid);
         if (fakeAccountsFile.contains(uuid)) return fakeAccountsFile.getInt(uuid);
@@ -64,6 +66,13 @@ public final class GoldEconomy extends JavaPlugin {
         fakeAccountsFile.set(uuid, 0);
         fakeAccounts.put(uuid, 0);
         return  getBalance(uuid);
+    }
+
+    public void setBalance(String uuid, int balance){
+        if (playerBank.containsKey(uuid)) playerBank.put(uuid, balance);
+        if (balanceFile.contains(uuid))  balanceFile.set(uuid, balance);
+        if (fakeAccounts.containsKey(uuid))  fakeAccounts.put(uuid, balance);
+        if (fakeAccountsFile.contains(uuid))  fakeAccountsFile.set(uuid, balance);
     }
 
     public Json getBalanceFile() {

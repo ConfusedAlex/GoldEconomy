@@ -22,7 +22,8 @@ public class Commands {
     @CommandHook("balance")
     public void balance(CommandSender commandSender) {
         Player player = (Player) commandSender;
-        player.sendMessage("Your have " + ChatColor.GOLD + plugin.getBalance(player.getUniqueId().toString()) + ChatColor.WHITE + " Gold on the Bank and " + ChatColor.GOLD + converter.getInventoryValue(player) + ChatColor.WHITE + " on hand.");
+        String uuid = player.getUniqueId().toString();
+        player.sendMessage("You have a total of " + ChatColor.GOLD + plugin.getBalance(uuid) + " Gold. " + plugin.getPlayerBank().get(uuid) + ChatColor.WHITE + " on the bank and " + ChatColor.GOLD + converter.getInventoryValue(player) + ChatColor.WHITE + " on hand." );
     }
 
     @CommandHook("pay")
@@ -71,6 +72,7 @@ public class Commands {
             return;
         } else if (nuggets.equals("confirm")) {
             converter.withdrawAll((Player) commandSender);
+            return;
         }
         converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
     }

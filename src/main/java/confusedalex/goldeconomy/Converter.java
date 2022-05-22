@@ -49,11 +49,38 @@ public class Converter {
         return value;
     }
 
-    public void withdrawAll(Player player){
+    public void remove(Player player, int amount){
         OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
-        int value = plugin.getPlayerBank().get(player.getUniqueId().toString());
-        plugin.getEconomyImplementer().withdrawPlayer(op, value);
+        int value = 0;
 
+        // calculating the value of all the gold in the inventory to nuggets
+        for (ItemStack item : player.getInventory()) {
+            if (item == null) continue;
+            Material material = item.getType();
+
+            if (!isGold(material)) continue;
+
+            value += (getValue(material) * item.getAmount());
+
+        }
+
+        // Checks if the Value of the items is greater than the amount to deposit
+        if (value < amount) return;
+
+        // Deletes all gold items
+        for (ItemStack item : player.getInventory()) {
+            if (item == null) continue;
+            if (!isGold(item.getType())) continue;
+
+            item.setAmount(0);
+            item.setType(Material.AIR);
+        }
+
+        int newBalance = value - amount;
+        give(player, newBalance);
+    }
+
+    public void give(Player player, int value){
         player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/81));
         value -= (value/81)*81;
         player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value/9));
@@ -61,18 +88,20 @@ public class Converter {
         player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
     }
 
-    public void withdraw(Player player, int nuggets){
+    public void withdrawAll(Player player){
         OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
-        int value = nuggets;
-        if (value > plugin.getPlayerBank().get(player.getUniqueId().toString())) return;
-
+        int value = plugin.getPlayerBank().get(player.getUniqueId().toString());
         plugin.getEconomyImplementer().withdrawPlayer(op, value);
 
-        player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/81));
-        value -= (value/81)*81;
-        player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value/9));
-        value -= (value/9)*9;
-        player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
+        give(player, value);
+    }
+
+    public void withdraw(Player player, int nuggets){
+        OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
+        if (nuggets > plugin.getPlayerBank().get(player.getUniqueId().toString())) return;
+        plugin.getEconomyImplementer().withdrawPlayer(op, nuggets);
+
+        give(player, nuggets);
 
     }
 
@@ -98,40 +127,8 @@ public class Converter {
 
     public void deposit(Player player, int nuggets){
         OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
-        int value = 0;
 
-        // calculating the value of all the gold in the inventory to nuggets
-        for (ItemStack item : player.getInventory()) {
-            if (item == null) continue;
-            Material material = item.getType();
-
-            if (!isGold(material)) continue;
-
-            value += (getValue(material) * item.getAmount());
-
-        }
-
-        // Checks if the Value of the items is greater than the amount to deposit
-        if (value < nuggets) return;
-
-        // Deletes all gold items
-        for (ItemStack item : player.getInventory()) {
-            if (item == null) continue;
-            if (!isGold(item.getType())) continue;
-
-            item.setAmount(0);
-            item.setType(Material.AIR);
-        }
-
-
-        int newBalance = value - nuggets;
-
-        player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, newBalance/81));
-        newBalance -= (newBalance/81)*81;
-        player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, newBalance/9));
-        newBalance -= (newBalance/9)*9;
-        player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, newBalance));
-
+        remove(player, nuggets);
         plugin.getEconomyImplementer().depositPlayer(op, nuggets);
     }
 }
