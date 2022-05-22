@@ -10,7 +10,9 @@ import java.util.Map;
 
 public final class GoldEconomy extends JavaPlugin {
     private final Json balanceFile = new Json("balance.json", getDataFolder().toString());
-    private final HashMap<String, Double> playerBank = new HashMap<>();
+    private final HashMap<String, Integer> playerBank = new HashMap<>();
+    private final Json fakeAccountsFile = new Json("fakeAccounts.json", getDataFolder().toString());
+    private final HashMap<String, Integer> fakeAccounts = new HashMap<>();
     private EconomyImplementer economyImplementer;
     private VaultHook vaultHook;
     private Converter converter;
@@ -34,33 +36,58 @@ public final class GoldEconomy extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for(Map.Entry<String, Double> entry : playerBank.entrySet()) {
+        for(Map.Entry<String, Integer> entry : playerBank.entrySet()) {
             String key = entry.getKey();
-            Double value = entry.getValue();
+            int value = entry.getValue();
 
             balanceFile.getFileData().insert(key, value);
         }
-
         balanceFile.write();
+
+        for(Map.Entry<String, Integer> entry : fakeAccounts.entrySet()) {
+            String key = entry.getKey();
+            int value = entry.getValue();
+
+            fakeAccountsFile.getFileData().insert(key, value);
+        }
+        fakeAccountsFile.write();
 
         vaultHook.unhook();
     }
 
-    public double getBalance(String uuid){
+    public int getBalance(String uuid){
         if (playerBank.containsKey(uuid)) return playerBank.get(uuid);
-        return balanceFile.getDouble(uuid);
+        if (balanceFile.contains(uuid)) return balanceFile.getInt(uuid);
+        if (fakeAccounts.containsKey(uuid)) return fakeAccounts.get(uuid);
+        if (fakeAccountsFile.contains(uuid)) return fakeAccountsFile.getInt(uuid);
+
+        fakeAccountsFile.set(uuid, 0);
+        fakeAccounts.put(uuid, 0);
+        return  getBalance(uuid);
     }
 
     public Json getBalanceFile() {
         return balanceFile;
     }
 
-    public void setBalances(String uuid, double aDouble) {
-        playerBank.put(uuid, aDouble);
+    public Json getFakeAccountsFile(){
+        return fakeAccountsFile;
     }
 
-    public HashMap<String, Double> getPlayerBank() {
+    public void setBalances(String uuid, int aInt) {
+        playerBank.put(uuid, aInt);
+    }
+
+    public void setFakeBalances(String uuid, int aInt) {
+        fakeAccounts.put(uuid, aInt);
+    }
+
+    public HashMap<String, Integer> getPlayerBank() {
         return playerBank;
+    }
+
+    public HashMap<String, Integer> getFakeAccounts() {
+        return fakeAccounts;
     }
 
     public EconomyImplementer getEconomyImplementer() {

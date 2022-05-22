@@ -3,3 +3,4 @@ version: '${project.version}'
 main: confusedalex.goldeconomy.GoldEconomy
 api-version: 1.18
 depend: [Vault]
+loadbefore: [Towny]

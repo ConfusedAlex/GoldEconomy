@@ -11,4 +11,10 @@ bank {
         user player
 
     }
+
+    withdraw string:arg? {
+        help withdraws money
+        hook withdraw
+        user player
+    }
 }

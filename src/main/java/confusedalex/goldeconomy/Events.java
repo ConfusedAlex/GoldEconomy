@@ -22,7 +22,7 @@ public class Events implements org.bukkit.event.Listener {
             balanceFile.set(uuid, 0);
         }
 
-        goldEconomy.setBalances(uuid, balanceFile.getDouble(uuid));
+        goldEconomy.setBalances(uuid, balanceFile.getInt(uuid));
     }
 
     @EventHandler
