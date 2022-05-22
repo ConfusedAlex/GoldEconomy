@@ -5,8 +5,10 @@ bank {
         hook balance
     }
 
-    setbalance double:arg {
-        help sets balace
-        hook setbalance
+    deposit string:arg? {
+        help deposits money
+        hook deposit
+        user player
+
     }
 }

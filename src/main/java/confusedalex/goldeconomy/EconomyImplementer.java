@@ -148,6 +148,7 @@ public class EconomyImplementer implements Economy {
             response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
         } else {
             response = new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
+            plugin.getPlayerBank().put(uuid, newBalance);
         }
 
         return response;
@@ -164,6 +165,7 @@ public class EconomyImplementer implements Economy {
             response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
         } else {
             response = new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
+            plugin.getPlayerBank().put(uuid, newBalance);
         }
 
         return response;
@@ -181,6 +183,7 @@ public class EconomyImplementer implements Economy {
             response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
         } else {
             response = new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
+            plugin.getPlayerBank().put(uuid, newBalance);
         }
 
         return response;
@@ -197,6 +200,7 @@ public class EconomyImplementer implements Economy {
             response = new EconomyResponse(v, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
         } else {
             response = new EconomyResponse(v, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
+            plugin.getPlayerBank().put(uuid, newBalance);
         }
 
         return response;

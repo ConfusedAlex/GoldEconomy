@@ -30,6 +30,7 @@ public class Events implements org.bukkit.event.Listener {
         String uuid = e.getPlayer().getUniqueId().toString();
 
         goldEconomy.getBalanceFile().set(uuid, goldEconomy.getPlayerBank().get(uuid));
+        goldEconomy.getPlayerBank().remove(uuid);
     }
 
 }

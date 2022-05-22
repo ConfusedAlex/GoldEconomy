@@ -13,6 +13,7 @@ public final class GoldEconomy extends JavaPlugin {
     private final HashMap<String, Double> playerBank = new HashMap<>();
     private EconomyImplementer economyImplementer;
     private VaultHook vaultHook;
+    private Converter converter;
 
     @Override
     public void onEnable() {
@@ -21,6 +22,8 @@ public final class GoldEconomy extends JavaPlugin {
         economyImplementer = new EconomyImplementer(this);
         vaultHook = new VaultHook(this, economyImplementer);
         vaultHook.hook();
+
+        converter = new Converter(this);
 
         // Commands from RedLib
         new CommandParser(this.getResource("commands.rdcml")).parse().register("GoldEconomy", new Commands(this));
@@ -43,6 +46,11 @@ public final class GoldEconomy extends JavaPlugin {
         vaultHook.unhook();
     }
 
+    public double getBalance(String uuid){
+        if (playerBank.containsKey(uuid)) return playerBank.get(uuid);
+        return balanceFile.getDouble(uuid);
+    }
+
     public Json getBalanceFile() {
         return balanceFile;
     }
@@ -57,5 +65,9 @@ public final class GoldEconomy extends JavaPlugin {
 
     public EconomyImplementer getEconomyImplementer() {
         return economyImplementer;
+    }
+
+    public Converter getConverter(){
+        return converter;
     }
 }
