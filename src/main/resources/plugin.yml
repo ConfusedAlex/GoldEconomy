@@ -1,6 +1,11 @@
+# Infos
 name: GoldEconomy
-version: '${project.version}'
-main: confusedalex.goldeconomy.GoldEconomy
+version: '1.0'
+description: A simple gold based Economy plugin that just works.
+author: ConfusedAlex
 api-version: 1.18
-depend: [Vault]
+
+# Data
+main: confusedalex.goldeconomy.GoldEconomy
 loadbefore: [Towny]
+depend: [Vault]

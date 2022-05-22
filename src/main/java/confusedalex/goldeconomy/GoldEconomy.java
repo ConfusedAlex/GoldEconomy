@@ -1,6 +1,7 @@
 package confusedalex.goldeconomy;
 
 import de.leonhard.storage.Json;
+import de.leonhard.storage.Yaml;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import redempt.redlib.commandmanager.CommandParser;
@@ -11,10 +12,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 public final class GoldEconomy extends JavaPlugin {
-    private final Json balanceFile = new Json("balance.json", getDataFolder().toString());
+    private final Json balanceFile = new Json("balance.json", getDataFolder() + "/data/");
     private final HashMap<String, Integer> playerBank = new HashMap<>();
-    private final Json fakeAccountsFile = new Json("fakeAccounts.json", getDataFolder().toString());
+    private final Json fakeAccountsFile = new Json("fakeAccounts.json", getDataFolder() + "/data/");
     private final HashMap<String, Integer> fakeAccounts = new HashMap<>();
+    private final Yaml configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
     private EconomyImplementer economyImplementer;
     private VaultHook vaultHook;
     private Converter converter;
@@ -105,5 +107,8 @@ public final class GoldEconomy extends JavaPlugin {
 
     public Converter getConverter(){
         return converter;
+    }
+    public Yaml getConfigFile(){
+        return configFile;
     }
 }

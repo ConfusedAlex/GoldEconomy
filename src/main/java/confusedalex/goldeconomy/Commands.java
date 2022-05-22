@@ -1,5 +1,7 @@
 package confusedalex.goldeconomy;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.TownBlockType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -19,6 +21,16 @@ public class Commands {
         converter = plugin.getConverter();
     }
 
+    public boolean isBankingRestrictedToPlot(Player player){
+        if (plugin.getConfigFile().getBoolean("restrictToBankPlot")){
+            if (TownyAPI.getInstance().getTownBlock(player.getLocation()) == null || !TownyAPI.getInstance().getTownBlock(player.getLocation()).getType().equals(TownBlockType.BANK)){
+                player.sendMessage("You have to be on a Bank Plot to use this command!");
+                return true;
+            }
+        }
+        return false;
+    }
+
     @CommandHook("balance")
     public void balance(CommandSender commandSender) {
         Player player = (Player) commandSender;
@@ -32,8 +44,10 @@ public class Commands {
         String senderuuid = sender.getUniqueId().toString();
         OfflinePlayer target = Bukkit.getOfflinePlayerIfCached(sTarget);
 
+        if (isBankingRestrictedToPlot(sender)) return;
+
         if (target == null){
-            commandSender.sendMessage("Player not found!");
+        commandSender.sendMessage("No player found!");
             return;
         } else if (amount > plugin.getBalance(senderuuid)) {
             return;
@@ -54,6 +68,9 @@ public class Commands {
 
     @CommandHook("deposit")
     public void deposit(CommandSender commandSender, String nuggets){
+        Player player = (Player) commandSender;
+
+        if (isBankingRestrictedToPlot(player)) return;
 
         if (nuggets == null){
             converter.depositAll((Player) commandSender);
@@ -64,6 +81,9 @@ public class Commands {
 
     @CommandHook("withdraw")
     public void withdraw(CommandSender commandSender, String nuggets){
+        Player player = (Player) commandSender;
+
+        if (isBankingRestrictedToPlot(player)) return;
 
         if (nuggets == null){
             commandSender.sendMessage("Do you really want to withdraw all your gold from your bank?");
