@@ -226,7 +226,7 @@ public class EconomyImplementer implements Economy {
                 return new EconomyResponse(amount, oldInventoryBalance - amount, EconomyResponse.ResponseType.SUCCESS, "");
             }
         } else {
-            // if FakeAccount
+            // if offline or fakeAccount
             oldBalance = bank.getBalance(uuid);
             int newBalance = (int) (oldBalance - amount);
             bank.setBalance(uuid, newBalance);

@@ -101,6 +101,22 @@ public class Commands {
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
         }
 
+
+    }
+
+    @CommandHook("set")
+    public void set(CommandSender commandSender, OfflinePlayer target, int gold){
+        eco.bank.setBalance(target.getUniqueId().toString(), gold);
+    }
+
+    @CommandHook("add")
+    public void add(CommandSender commandSender, OfflinePlayer target, int gold){
+     eco.depositPlayer(target, gold);
+    }
+
+    @CommandHook("remove")
+    public void remove(CommandSender commandSender, OfflinePlayer target, int gold) {
+        eco.withdrawPlayer(target, gold);
     }
 }
 
