@@ -24,8 +24,7 @@ public final class GoldEconomy extends JavaPlugin {
         // Config
         Yaml configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
 
-        // Language check
-        Bukkit.getConsoleSender().sendMessage(configFile.getString("language"));
+        // Language
         ResourceBundle bundle;
         if ("de_DE".equals(configFile.getString("language"))) {
              bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
@@ -49,10 +48,14 @@ public final class GoldEconomy extends JavaPlugin {
 
         // Event class registering
         Bukkit.getPluginManager().registerEvents(new Events (this, eco.bank), this);
+        // If removeGoldDrop is true, register Listener
+        if (configFile.getBoolean("removeGoldDrop")) Bukkit.getPluginManager().registerEvents(new RemoveGoldDrops(), this);
+
     }
 
     @Override
     public void onDisable() {
+        // Save player HashMap to File
         for(Map.Entry<String, Integer> entry : eco.bank.getPlayerBank().entrySet()) {
             String key = entry.getKey();
             int value = entry.getValue();
@@ -61,6 +64,7 @@ public final class GoldEconomy extends JavaPlugin {
         }
         eco.bank.getBalanceFile().write();
 
+        // Save FakeAccount HashMap to File
         for(Map.Entry<String, Integer> entry : eco.bank.getFakeAccounts().entrySet()) {
             String key = entry.getKey();
             int value = entry.getValue();

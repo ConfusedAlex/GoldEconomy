@@ -51,10 +51,7 @@ public class Commands {
 
         if (isBankingRestrictedToPlot(sender)) return;
 
-        if (target == null){
-        plugin.sendMessage(bundle.getString("error.noplayer"), sender);
-            return;
-        } else if (amount > eco.bank.getBalance(senderuuid)) {
+        if (amount > eco.bank.getBalance(senderuuid)) {
             return;
         } else if (senderuuid.equals(targetuuid)){
             plugin.sendMessage(bundle.getString("error.payyourself"), sender);
@@ -99,6 +96,7 @@ public class Commands {
         } else if (nuggets.equals("confirm")) {
             eco.converter.withdrawAll((Player) commandSender);
         } else if (!NumberUtils.isNumber(nuggets)) {
+            return;
         } else {
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
         }
