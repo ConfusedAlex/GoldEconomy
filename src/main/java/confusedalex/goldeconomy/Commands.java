@@ -51,7 +51,7 @@ public class Commands {
 
         if (isBankingRestrictedToPlot(sender)) return;
 
-        if (amount > eco.bank.getBalance(senderuuid)) {
+        if (amount > eco.bank.getTotalBalance(senderuuid)) {
             return;
         } else if (senderuuid.equals(targetuuid)){
             plugin.sendMessage(bundle.getString("error.payyourself"), sender);
@@ -62,9 +62,9 @@ public class Commands {
         plugin.sendMessage(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
         if (target.isOnline()) {
             plugin.sendMessage(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
-            eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getBalance(senderuuid) + amount);
+            eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getTotalBalance(senderuuid) + amount);
         } else {
-            eco.depositPlayer(target, eco.bank.getBalance(senderuuid) + amount);
+            eco.depositPlayer(target, eco.bank.getTotalBalance(senderuuid) + amount);
         }
     }
 

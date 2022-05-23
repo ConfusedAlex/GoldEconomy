@@ -22,7 +22,7 @@ public class Bank {
         fakeAccounts = new HashMap<>();
     }
 
-    public int getBalance(String uuid){
+    public int getTotalBalance(String uuid){
         if (playerBank.containsKey(uuid)) return playerBank.get(uuid) + eco.converter.getInventoryValue(Objects.requireNonNull(Bukkit.getPlayer(UUID.fromString(uuid))));
         else if (balanceFile.contains(uuid)) return balanceFile.getInt(uuid);
         else if (fakeAccounts.containsKey(uuid)) return fakeAccounts.get(uuid);
@@ -30,7 +30,12 @@ public class Bank {
 
         fakeAccountsFile.set(uuid, 0);
         fakeAccounts.put(uuid, 0);
-        return getBalance(uuid);
+        return getTotalBalance(uuid);
+    }
+
+    public int getAccountBalance(String uuid){
+        if (playerBank.containsKey(uuid)) return playerBank.get(uuid);
+        else return balanceFile.getInt(uuid);
     }
 
     public void setBalance(String uuid, int balance){

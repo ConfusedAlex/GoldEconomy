@@ -6,12 +6,16 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ResourceBundle;
+
 public class Converter {
 
     EconomyImplementer eco;
+    ResourceBundle bundle;
 
-    public Converter(EconomyImplementer economyImplementer) {
+    public Converter(EconomyImplementer economyImplementer, ResourceBundle bundle) {
         this.eco = economyImplementer;
+        this.bundle = bundle;
     }
 
     public int getValue(Material material) {
@@ -60,7 +64,6 @@ public class Converter {
             if (isNotGold(material)) continue;
 
             value += (getValue(material) * item.getAmount());
-
         }
 
         // Checks if the Value of the items is greater than the amount to deposit
@@ -90,8 +93,8 @@ public class Converter {
     public void withdrawAll(Player player){
         String uuid = player.getUniqueId().toString();
 
-        // searches in the Database for the balance, so that a player can't withdraw gold from his Inventory
-        int value = eco.bank.getBalance(player.getUniqueId().toString());
+        // searches in the Hashmap for the balance, so that a player can't withdraw gold from his Inventory
+        int value = eco.bank.getPlayerBank().get(player.getUniqueId().toString());
         eco.bank.setBalance(uuid, (0));
 
         give(player, value);
@@ -101,7 +104,11 @@ public class Converter {
         String uuid = player.getUniqueId().toString();
         int oldbalance = eco.bank.getPlayerBank().get(uuid);
 
-        if (nuggets > eco.bank.getBalance(player.getUniqueId().toString())) return;
+        // Checks balance in HashMap
+        if (nuggets > eco.bank.getPlayerBank().get(player.getUniqueId().toString())) {
+            eco.plugin.sendMessage(bundle.getString("error.notenoughmoneywithdraw"), player);
+            return;
+        }
         eco.bank.setBalance(uuid, (oldbalance - nuggets));
 
         give(player, nuggets);

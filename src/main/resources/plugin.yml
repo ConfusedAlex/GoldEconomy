@@ -6,6 +6,7 @@ author: ConfusedAlex
 api-version: 1.18
 
 # Data
+load: STARTUP
 main: confusedalex.goldeconomy.GoldEconomy
 loadbefore: [Towny]
 depend: [Vault]

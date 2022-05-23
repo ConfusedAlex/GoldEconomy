@@ -33,7 +33,7 @@ public final class GoldEconomy extends JavaPlugin {
         }
 
         // Vault shit
-        eco = new EconomyImplementer(this);
+        eco = new EconomyImplementer(this, bundle);
         vaultHook = new VaultHook(this, eco);
         vaultHook.hook();
 
