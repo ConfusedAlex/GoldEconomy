@@ -96,7 +96,6 @@ public class Commands {
         } else if (nuggets.equals("confirm")) {
             eco.converter.withdrawAll((Player) commandSender);
         } else if (!NumberUtils.isNumber(nuggets)) {
-            return;
         } else {
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
         }

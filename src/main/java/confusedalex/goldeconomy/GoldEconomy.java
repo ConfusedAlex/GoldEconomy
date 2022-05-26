@@ -38,7 +38,7 @@ public final class GoldEconomy extends JavaPlugin {
         vaultHook.hook();
 
         // Commands from RedLib
-        ArgType<OfflinePlayer> offlinePlayer = new ArgType<>("offlinePlayer", Bukkit::getOfflinePlayerIfCached)
+        ArgType<OfflinePlayer> offlinePlayer = new ArgType<>("offlinePlayer", Bukkit::getOfflinePlayer)
                 .tabStream(c -> Bukkit.getOnlinePlayers().stream().map(Player::getName));
         new CommandParser(this.getResource("commands.rdcml"))
                 .setArgTypes(offlinePlayer)
