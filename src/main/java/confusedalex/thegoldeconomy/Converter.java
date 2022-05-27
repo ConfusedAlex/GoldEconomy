@@ -94,7 +94,7 @@ public class Converter {
         String uuid = player.getUniqueId().toString();
 
         // searches in the Hashmap for the balance, so that a player can't withdraw gold from his Inventory
-        int value = eco.bank.getPlayerBank().get(player.getUniqueId().toString());
+        int value = eco.bank.getAccountBalance(player.getUniqueId().toString());
         eco.bank.setBalance(uuid, (0));
 
         give(player, value);
@@ -102,7 +102,7 @@ public class Converter {
 
     public void withdraw(Player player, int nuggets){
         String uuid = player.getUniqueId().toString();
-        int oldbalance = eco.bank.getPlayerBank().get(uuid);
+        int oldbalance = eco.bank.getAccountBalance(player.getUniqueId().toString());
 
         // Checks balance in HashMap
         if (nuggets > eco.bank.getPlayerBank().get(player.getUniqueId().toString())) {
