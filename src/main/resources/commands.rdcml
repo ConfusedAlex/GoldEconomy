@@ -27,18 +27,18 @@ bank {
     set offlinePlayer:target int:gold* {
         help sets balance of user
         hook set
-        permission goldeconomy.set
+        permission thegoldeconomy.set
     }
 
     add offlinePlayer:taret int:gold* {
         help add adds gold to balance of user
         hook add
-        permission goldeconomy.add
+        permission thegoldeconomy.add
     }
 
     remove offlinePlayer:target int:gold* {
         help removes gold from balance
         hook add
-        permission goldeconomy.remove
+        permission thegoldeconomy.remove
     }
 }

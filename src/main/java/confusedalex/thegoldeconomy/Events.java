@@ -1,4 +1,4 @@
-package confusedalex.goldeconomy;
+package confusedalex.thegoldeconomy;
 
 import de.leonhard.storage.Json;
 import org.bukkit.event.EventHandler;
@@ -7,10 +7,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 
 public class Events implements org.bukkit.event.Listener {
-    GoldEconomy plugin;
+    TheGoldEconomy plugin;
     Bank bank;
 
-    public Events(GoldEconomy plugin, Bank bank) {
+    public Events(TheGoldEconomy plugin, Bank bank) {
         this.plugin = plugin;
         this.bank = bank;
     }

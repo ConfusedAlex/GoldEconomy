@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ConfusedAlex</groupId>
-    <artifactId>GoldEconomy</artifactId>
-    <version>0.5</version>
+    <artifactId>TheGoldEconomy</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>GoldEconomy</name>
+    <name>TheGoldEconomy</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -44,15 +44,15 @@
                     <relocations>
                         <relocation>
                             <pattern>de.leonhard.storage</pattern>
-                            <shadedPattern>confusedalex.goldeconomy.storage</shadedPattern>
+                            <shadedPattern>confusedalex.thegoldeconomy.storage</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>confusedalex.goldeconomy.acf</shadedPattern> <!-- Replace this -->
+                            <shadedPattern>confusedalex.thegoldeconomy.acf</shadedPattern> <!-- Replace this -->
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>confusedalex.goldeconomy.locales</shadedPattern> <!-- Replace this -->
+                            <shadedPattern>confusedalex.thegoldeconomy.locales</shadedPattern> <!-- Replace this -->
                         </relocation>
                     </relocations>
                 </configuration>

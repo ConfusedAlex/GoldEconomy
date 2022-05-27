@@ -1,4 +1,4 @@
-package confusedalex.goldeconomy;
+package confusedalex.thegoldeconomy;
 
 import de.leonhard.storage.Json;
 import org.bukkit.Bukkit;
@@ -14,23 +14,27 @@ public class Bank {
     final Json fakeAccountsFile;
     private final HashMap<String, Integer> fakeAccounts;
 
-    public Bank(GoldEconomy goldEconomy, EconomyImplementer eco) {
+    public Bank(TheGoldEconomy theGoldEconomy, EconomyImplementer eco) {
         this.eco = eco;
-        balanceFile = new Json("balance.json", goldEconomy.getDataFolder() + "/data/");
+        balanceFile = new Json("balance.json", theGoldEconomy.getDataFolder() + "/data/");
         playerBank = new HashMap<>();
-        fakeAccountsFile = new Json("fakeAccounts.json", goldEconomy.getDataFolder() + "/data/");
+        fakeAccountsFile = new Json("fakeAccounts.json", theGoldEconomy.getDataFolder() + "/data/");
         fakeAccounts = new HashMap<>();
     }
 
-    public int getTotalBalance(String uuid){
+    public int getTotalPlayerBalance(String uuid){
         if (playerBank.containsKey(uuid)) return playerBank.get(uuid) + eco.converter.getInventoryValue(Objects.requireNonNull(Bukkit.getPlayer(UUID.fromString(uuid))));
-        else if (balanceFile.contains(uuid)) return balanceFile.getInt(uuid);
-        else if (fakeAccounts.containsKey(uuid)) return fakeAccounts.get(uuid);
-        else if (fakeAccountsFile.contains(uuid)) return fakeAccountsFile.getInt(uuid);
+        else return balanceFile.getInt(uuid);
 
-        fakeAccountsFile.set(uuid, 0);
-        fakeAccounts.put(uuid, 0);
-        return getTotalBalance(uuid);
+    }
+    
+    public int getFakeBalance(String s){
+        if (fakeAccounts.containsKey(s)) return fakeAccounts.get(s);
+        else if (fakeAccountsFile.contains(s)) return fakeAccountsFile.getInt(s);
+
+        fakeAccountsFile.set(s, 0);
+        fakeAccounts.put(s, 0);
+        return getFakeBalance(s);
     }
 
     public int getAccountBalance(String uuid){

@@ -1,4 +1,4 @@
-package confusedalex.goldeconomy;
+package confusedalex.thegoldeconomy;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.TownBlockType;
@@ -14,13 +14,11 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Commands {
-    GoldEconomy plugin;
     ResourceBundle bundle;
     EconomyImplementer eco;
     Yaml configFile;
 
-    public Commands(GoldEconomy plugin, ResourceBundle bundle, EconomyImplementer eco, Yaml configFile) {
-        this.plugin = plugin;
+    public Commands(ResourceBundle bundle, EconomyImplementer eco, Yaml configFile) {
         this.bundle = bundle;
         this.eco = eco;
         this.configFile = configFile;
@@ -29,7 +27,7 @@ public class Commands {
     public boolean isBankingRestrictedToPlot(Player player){
         if (configFile.getBoolean("restrictToBankPlot")) {
             if (TownyAPI.getInstance().getTownBlock(player.getLocation()) == null || !Objects.requireNonNull(TownyAPI.getInstance().getTownBlock(player.getLocation())).getType().equals(TownBlockType.BANK)){
-                plugin.sendMessage(bundle.getString("error.bankplot"), player);
+                Util.sendMessage(bundle.getString("error.bankplot"), player);
                 return true;
             }
         }
@@ -40,7 +38,7 @@ public class Commands {
     public void balance(CommandSender commandSender) {
         Player player = (Player) commandSender;
         String uuid = player.getUniqueId().toString();
-        plugin.sendMessage(String.format(bundle.getString("info.balance"), (int) eco.getBalance(uuid), eco.bank.getPlayerBank().get(uuid), eco.converter.getInventoryValue(player)), player);
+        Util.sendMessage(String.format(bundle.getString("info.balance"), (int) eco.getBalance(uuid), eco.bank.getPlayerBank().get(uuid), eco.converter.getInventoryValue(player)), player);
     }
 
     @CommandHook("pay")
@@ -51,20 +49,20 @@ public class Commands {
 
         if (isBankingRestrictedToPlot(sender)) return;
 
-        if (amount > eco.bank.getTotalBalance(senderuuid)) {
+        if (amount > eco.bank.getTotalPlayerBalance(senderuuid)) {
             return;
         } else if (senderuuid.equals(targetuuid)){
-            plugin.sendMessage(bundle.getString("error.payyourself"), sender);
+            Util.sendMessage(bundle.getString("error.payyourself"), sender);
             return;
         }
 
         eco.withdrawPlayer(sender, amount);
-        plugin.sendMessage(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
+        Util.sendMessage(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
         if (target.isOnline()) {
-            plugin.sendMessage(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
-            eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getTotalBalance(senderuuid) + amount);
+            Util.sendMessage(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
+            eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getTotalPlayerBalance(senderuuid) + amount);
         } else {
-            eco.depositPlayer(target, eco.bank.getTotalBalance(senderuuid) + amount);
+            eco.depositPlayer(target, eco.bank.getTotalPlayerBalance(senderuuid) + amount);
         }
     }
 
@@ -90,9 +88,9 @@ public class Commands {
         }
 
         if (nuggets == null) {
-            plugin.sendMessage(bundle.getString("conformation.withdrawall"), player);
-            plugin.sendMessage(bundle.getString("warning.golddropped"), player);
-            plugin.sendMessage(bundle.getString("confirm.withdrawall"), player);
+            Util.sendMessage(bundle.getString("conformation.withdrawall"), player);
+            Util.sendMessage(bundle.getString("warning.golddropped"), player);
+            Util.sendMessage(bundle.getString("confirm.withdrawall"), player);
         } else if (nuggets.equals("confirm")) {
             eco.converter.withdrawAll((Player) commandSender);
         } else if (!NumberUtils.isNumber(nuggets)) {
@@ -105,17 +103,30 @@ public class Commands {
 
     @CommandHook("set")
     public void set(CommandSender commandSender, OfflinePlayer target, int gold){
+        Player player = (Player) commandSender;
+
         eco.bank.setBalance(target.getUniqueId().toString(), gold);
+        Util.sendMessage(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
+        Util.sendMessage(String.format(bundle.getString("info.target.moneyset"), gold), Bukkit.getPlayer(target.getUniqueId()));
+
     }
 
     @CommandHook("add")
     public void add(CommandSender commandSender, OfflinePlayer target, int gold){
-     eco.depositPlayer(target, gold);
+        Player player = (Player) commandSender;
+
+        eco.depositPlayer(target, gold);
+        Util.sendMessage(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
+        Util.sendMessage(String.format(bundle.getString("info.target.addmoney"), gold), Bukkit.getPlayer(target.getUniqueId()));
     }
 
     @CommandHook("remove")
     public void remove(CommandSender commandSender, OfflinePlayer target, int gold) {
+        Player player = (Player) commandSender;
+
         eco.withdrawPlayer(target, gold);
+        Util.sendMessage(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
+        Util.sendMessage(String.format(bundle.getString("info.target.remove"), gold), Bukkit.getPlayer(target.getUniqueId()));
     }
 }
 

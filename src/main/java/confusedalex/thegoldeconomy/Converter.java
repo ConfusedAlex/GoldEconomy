@@ -1,4 +1,4 @@
-package confusedalex.goldeconomy;
+package confusedalex.thegoldeconomy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -106,7 +106,7 @@ public class Converter {
 
         // Checks balance in HashMap
         if (nuggets > eco.bank.getPlayerBank().get(player.getUniqueId().toString())) {
-            eco.plugin.sendMessage(bundle.getString("error.notenoughmoneywithdraw"), player);
+            Util.sendMessage(bundle.getString("error.notenoughmoneywithdraw"), player);
             return;
         }
         eco.bank.setBalance(uuid, (oldbalance - nuggets));

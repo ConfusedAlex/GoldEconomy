@@ -1,5 +1,5 @@
 # Infos
-name: GoldEconomy
+name: TheGoldEconomy
 version: '1.0'
 description: A simple gold based Economy plugin that just works.
 author: ConfusedAlex
@@ -7,6 +7,6 @@ api-version: 1.18
 
 # Data
 load: STARTUP
-main: confusedalex.goldeconomy.GoldEconomy
+main: confusedalex.thegoldeconomy.TheGoldEconomy
 loadbefore: [Towny]
 depend: [Vault]

@@ -1,4 +1,4 @@
-package confusedalex.goldeconomy;
+package confusedalex.thegoldeconomy;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -8,10 +8,10 @@ import org.bukkit.plugin.ServicePriority;
 import static java.util.logging.Level.INFO;
 
 public class VaultHook {
-    GoldEconomy plugin;
+    TheGoldEconomy plugin;
     Economy provider;
 
-    public VaultHook(GoldEconomy plugin, Economy provider) {
+    public VaultHook(TheGoldEconomy plugin, Economy provider) {
         this.plugin = plugin;
         this.provider = provider;
     }
