@@ -50,6 +50,17 @@ public final class TheGoldEconomy extends JavaPlugin {
         // If removeGoldDrop is true, register Listener
         if (configFile.getBoolean("removeGoldDrop")) Bukkit.getPluginManager().registerEvents(new RemoveGoldDrops(), this);
 
+        // Update Checker
+        if (configFile.getBoolean("updateCheck")) {
+            new UpdateChecker(this, 102242).getVersion(version -> {
+                if (this.getDescription().getVersion().equals(version)) {
+                    getLogger().info("There is not a new update available.");
+                } else {
+                    getLogger().info("There is a new update available.");
+                }
+            });
+        }
+
     }
 
     @Override
