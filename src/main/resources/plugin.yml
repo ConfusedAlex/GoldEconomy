@@ -1,9 +1,9 @@
 # Infos
 name: TheGoldEconomy
-version: '1.2'
+version: '1.2.2'
 description: A simple gold based Economy plugin that just works.
 author: ConfusedAlex
-api-version: 1.19
+api-version: 1.18
 
 # Data
 load: STARTUP

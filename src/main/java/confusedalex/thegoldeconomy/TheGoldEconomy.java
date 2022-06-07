@@ -31,6 +31,10 @@ public final class TheGoldEconomy extends JavaPlugin {
              bundle = ResourceBundle.getBundle("messages", Locale.US);
         }
 
+        int pluginId = 15402;
+        new Metrics(this, pluginId);
+
+
         // Vault shit
         eco = new EconomyImplementer(this, bundle);
         vaultHook = new VaultHook(this, eco);
