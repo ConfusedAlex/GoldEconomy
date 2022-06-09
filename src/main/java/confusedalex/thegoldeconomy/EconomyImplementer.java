@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class EconomyImplementer implements Economy {
     TheGoldEconomy plugin;
@@ -92,7 +91,7 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public double getBalance(String s) {
-        if (Util.isOfflinePlayer(s) != null) return bank.getTotalPlayerBalance(UUID.fromString(s).toString());
+        if (Util.isOfflinePlayer(s) != null) return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         return bank.getFakeBalance(s);
     }
 
@@ -104,7 +103,7 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public double getBalance(String s, String s1) {
-        if (Util.isOfflinePlayer(s) != null) return bank.getTotalPlayerBalance(UUID.fromString(s).toString());
+        if (Util.isOfflinePlayer(s) != null) return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         return bank.getFakeBalance(s);
     }
 
@@ -116,7 +115,7 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public boolean has(String s, double v) {
-        if (Util.isOfflinePlayer(s) != null) return v < bank.getTotalPlayerBalance(UUID.fromString(s).toString());
+        if (Util.isOfflinePlayer(s) != null) return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         else return v < bank.getFakeBalance(s);
     }
 
@@ -127,7 +126,7 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public boolean has(String s, String s1, double v) {
-        if (Util.isOfflinePlayer(s) != null) return v < bank.getTotalPlayerBalance(UUID.fromString(s).toString());
+        if (Util.isOfflinePlayer(s) != null) return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         else return v < bank.getFakeBalance(s);
     }
 
@@ -144,7 +143,7 @@ public class EconomyImplementer implements Economy {
         if (amount < 0) return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
         if (Util.isOfflinePlayer(s) != null) {
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(s));
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(s);
             String uuid = offlinePlayer.getUniqueId().toString();
 
             // if player is online
@@ -240,7 +239,7 @@ public class EconomyImplementer implements Economy {
         if (amount < 0) return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
         if (Util.isOfflinePlayer(s) != null) {
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(s));
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(s);
             String uuid = offlinePlayer.getUniqueId().toString();
 
             // if player is online
@@ -337,7 +336,7 @@ public class EconomyImplementer implements Economy {
         if (amount < 0) return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
         if (Util.isOfflinePlayer(s) != null) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(s));
+            OfflinePlayer player = Bukkit.getOfflinePlayer(s);
             String uuid = player.getUniqueId().toString();
 
             // Getting balance and calculating new Balance
@@ -374,7 +373,7 @@ public class EconomyImplementer implements Economy {
         if (amount < 0) return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
         if (Util.isOfflinePlayer(s) != null) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(s));
+            OfflinePlayer player = Bukkit.getOfflinePlayer(s);
             String uuid = player.getUniqueId().toString();
 
             // Getting balance and calculating new Balance

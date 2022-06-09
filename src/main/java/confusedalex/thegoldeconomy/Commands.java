@@ -60,9 +60,9 @@ public class Commands {
         Util.sendMessage(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
         if (target.isOnline()) {
             Util.sendMessage(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
-            eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getTotalPlayerBalance(senderuuid) + amount);
+            eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getTotalPlayerBalance(targetuuid) + amount);
         } else {
-            eco.depositPlayer(target, eco.bank.getTotalPlayerBalance(senderuuid) + amount);
+            eco.depositPlayer(target, eco.bank.getTotalPlayerBalance(targetuuid) + amount);
         }
     }
 
