@@ -31,6 +31,10 @@ public final class TheGoldEconomy extends JavaPlugin {
              bundle = ResourceBundle.getBundle("messages", Locale.US);
         }
 
+        int pluginId = 15402;
+        new Metrics(this, pluginId);
+
+
         // Vault shit
         eco = new EconomyImplementer(this, bundle);
         vaultHook = new VaultHook(this, eco);
@@ -49,6 +53,17 @@ public final class TheGoldEconomy extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new Events (this, eco.bank), this);
         // If removeGoldDrop is true, register Listener
         if (configFile.getBoolean("removeGoldDrop")) Bukkit.getPluginManager().registerEvents(new RemoveGoldDrops(), this);
+
+        // Update Checker
+        if (configFile.getBoolean("updateCheck")) {
+            new UpdateChecker(this, 102242).getVersion(version -> {
+                if (this.getDescription().getVersion().equals(version)) {
+                    getLogger().info("There is not a new update available.");
+                } else {
+                    getLogger().info("There is a new update available.");
+                }
+            });
+        }
 
     }
 
