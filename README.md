@@ -1,5 +1,6 @@
-[![GitHub license](https://img.shields.io/github/license/ConfusedAlex/GoldEconomy)](https://github.com/ConfusedAlex/GoldEconomy/blob/master/LICENSE)
-# TheGoldEconomy
+![Spiget Downloads](https://img.shields.io/spiget/downloads/102242?style=for-the-badge)
+![Spiget Rating](https://img.shields.io/spiget/rating/102242?style=for-the-badge)
+![Spiget tested server versions](https://img.shields.io/spiget/tested-versions/102242?style=for-the-badge)
 ## Introduction
 TheGoldEconomy is a gold based Economy plugin that's lightweight, easy to configure and just works.
 ## Table of Contents
