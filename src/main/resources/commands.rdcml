@@ -38,7 +38,7 @@ bank {
 
     remove offlinePlayer:target int:gold* {
         help removes gold from balance
-        hook add
+        hook remove
         permission thegoldeconomy.remove
     }
 }
