@@ -27,8 +27,10 @@ public final class TheGoldEconomy extends JavaPlugin {
         ResourceBundle bundle;
         if ("de_DE".equals(configFile.getString("language"))) {
              bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
-        } else {
+        } else if ("en_US".equals(configFile.getString("language"))) {
              bundle = ResourceBundle.getBundle("messages", Locale.US);
+        } else {
+             bundle = ResourceBundle.getBundle("messages", Locale.ENGLISH);
         }
 
         int pluginId = 15402;
@@ -57,10 +59,8 @@ public final class TheGoldEconomy extends JavaPlugin {
         // Update Checker
         if (configFile.getBoolean("updateCheck")) {
             new UpdateChecker(this, 102242).getVersion(version -> {
-                if (this.getDescription().getVersion().equals(version)) {
-                    getLogger().info("There is not a new update available.");
-                } else {
-                    getLogger().info("There is a new update available.");
+                if (!this.getDescription().getVersion().equals(version)) {
+                    getLogger().info(bundle.getString("info.update"));
                 }
             });
         }
@@ -88,5 +88,7 @@ public final class TheGoldEconomy extends JavaPlugin {
         eco.bank.fakeAccountsFile.write();
 
         vaultHook.unhook();
+
+        getLogger().info("TheGoldEconomy disabled.");
     }
 }

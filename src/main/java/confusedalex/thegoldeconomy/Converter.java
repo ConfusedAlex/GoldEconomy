@@ -106,7 +106,7 @@ public class Converter {
 
         // Checks balance in HashMap
         if (nuggets > eco.bank.getPlayerBank().get(player.getUniqueId().toString())) {
-            Util.sendMessage(bundle.getString("error.notenoughmoneywithdraw"), player);
+            Util.sendMessageToPlayer(bundle.getString("error.notenoughmoneywithdraw"), player);
             return;
         }
         eco.bank.setBalance(uuid, (oldbalance - nuggets));

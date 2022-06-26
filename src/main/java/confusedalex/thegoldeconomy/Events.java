@@ -22,6 +22,7 @@ public class Events implements org.bukkit.event.Listener {
 
         if (!balanceFile.contains(uuid)) {
             balanceFile.set(uuid, 0);
+            balanceFile.write();
         }
 
         bank.getPlayerBank().put(uuid, balanceFile.getInt(uuid));

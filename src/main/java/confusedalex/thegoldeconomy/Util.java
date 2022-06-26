@@ -17,8 +17,9 @@ public class Util {
         return null;
     }
 
-    public static void sendMessage(String message, Player player){
+    public static void sendMessageToPlayer(String message, Player player){
         if (player == null) return;
         player.sendMessage(ChatColor.GOLD + "[TheGoldEconomy] " + ChatColor.WHITE + ChatColor.translateAlternateColorCodes('&', message));
     }
+
 }

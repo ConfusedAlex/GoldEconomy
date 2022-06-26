@@ -27,7 +27,7 @@ public class Commands {
     public boolean isBankingRestrictedToPlot(Player player){
         if (configFile.getBoolean("restrictToBankPlot")) {
             if (TownyAPI.getInstance().getTownBlock(player.getLocation()) == null || !Objects.requireNonNull(TownyAPI.getInstance().getTownBlock(player.getLocation())).getType().equals(TownBlockType.BANK)){
-                Util.sendMessage(bundle.getString("error.bankplot"), player);
+                Util.sendMessageToPlayer(bundle.getString("error.bankplot"), player);
                 return true;
             }
         }
@@ -38,7 +38,7 @@ public class Commands {
     public void balance(CommandSender commandSender) {
         Player player = (Player) commandSender;
         String uuid = player.getUniqueId().toString();
-        Util.sendMessage(String.format(bundle.getString("info.balance"), (int) eco.getBalance(uuid), eco.bank.getPlayerBank().get(uuid), eco.converter.getInventoryValue(player)), player);
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.balance"), (int) eco.getBalance(uuid), eco.bank.getPlayerBank().get(uuid), eco.converter.getInventoryValue(player)), player);
     }
 
     @CommandHook("pay")
@@ -50,16 +50,20 @@ public class Commands {
         if (isBankingRestrictedToPlot(sender)) return;
 
         if (amount > eco.bank.getTotalPlayerBalance(senderuuid)) {
+            Util.sendMessageToPlayer(bundle.getString("error.notenough"), sender);
             return;
         } else if (senderuuid.equals(targetuuid)){
-            Util.sendMessage(bundle.getString("error.payyourself"), sender);
+            Util.sendMessageToPlayer(bundle.getString("error.payyourself"), sender);
+            return;
+        } else if (Util.isOfflinePlayer(target.getName()) == null) {
+            Util.sendMessageToPlayer(bundle.getString("error.noplayer"), sender);
             return;
         }
 
         eco.withdrawPlayer(sender, amount);
-        Util.sendMessage(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
         if (target.isOnline()) {
-            Util.sendMessage(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
             eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getTotalPlayerBalance(targetuuid) + amount);
         } else {
             eco.depositPlayer(target, eco.bank.getTotalPlayerBalance(targetuuid) + amount);
@@ -77,6 +81,8 @@ public class Commands {
             return;
         }
         eco.converter.deposit((Player) commandSender, Integer.parseInt(nuggets));
+
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
     }
 
     @CommandHook("withdraw")
@@ -88,9 +94,9 @@ public class Commands {
         }
 
         if (nuggets == null) {
-            Util.sendMessage(bundle.getString("conformation.withdrawall"), player);
-            Util.sendMessage(bundle.getString("warning.golddropped"), player);
-            Util.sendMessage(bundle.getString("confirm.withdrawall"), player);
+            Util.sendMessageToPlayer(bundle.getString("conformation.withdrawall"), player);
+            Util.sendMessageToPlayer(bundle.getString("warning.golddropped"), player);
+            Util.sendMessageToPlayer(bundle.getString("confirm.withdrawall"), player);
         } else if (nuggets.equals("confirm")) {
             eco.converter.withdrawAll((Player) commandSender);
         } else if (!NumberUtils.isNumber(nuggets)) {
@@ -98,7 +104,7 @@ public class Commands {
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
         }
 
-
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.converter.getInventoryValue((Player) commandSender)), player);
     }
 
     @CommandHook("set")
@@ -106,8 +112,8 @@ public class Commands {
         Player player = (Player) commandSender;
 
         eco.bank.setBalance(target.getUniqueId().toString(), gold);
-        Util.sendMessage(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
-        Util.sendMessage(String.format(bundle.getString("info.target.moneyset"), gold), Bukkit.getPlayer(target.getUniqueId()));
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.target.moneyset"), gold), Bukkit.getPlayer(target.getUniqueId()));
 
     }
 
@@ -116,8 +122,8 @@ public class Commands {
         Player player = (Player) commandSender;
 
         eco.depositPlayer(target, gold);
-        Util.sendMessage(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
-        Util.sendMessage(String.format(bundle.getString("info.target.addmoney"), gold), Bukkit.getPlayer(target.getUniqueId()));
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.target.addmoney"), gold), Bukkit.getPlayer(target.getUniqueId()));
     }
 
     @CommandHook("remove")
@@ -125,8 +131,8 @@ public class Commands {
         Player player = (Player) commandSender;
 
         eco.withdrawPlayer(target, gold);
-        Util.sendMessage(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
-        Util.sendMessage(String.format(bundle.getString("info.target.remove"), gold), Bukkit.getPlayer(target.getUniqueId()));
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.target.remove"), gold), Bukkit.getPlayer(target.getUniqueId()));
     }
 }
 
