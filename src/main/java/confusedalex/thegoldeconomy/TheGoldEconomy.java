@@ -30,7 +30,7 @@ public final class TheGoldEconomy extends JavaPlugin {
         } else if ("en_US".equals(configFile.getString("language"))) {
              bundle = ResourceBundle.getBundle("messages", Locale.US);
         } else {
-             bundle = ResourceBundle.getBundle("messages", Locale.ENGLISH);
+             bundle = ResourceBundle.getBundle("messages", Locale.US);
         }
 
         int pluginId = 15402;

@@ -4,7 +4,7 @@ removeGoldDrop: true
 updateCheck: true
 # Valid language are:
 # German: de_DE
-# English: en_EN
-language: "en_EN"
+# English: en_US
+language: "en_US"
 # Do you want to restrict bank commands to bank plots (requires Towny)
 restrictToBankPlot: false

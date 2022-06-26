@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class EconomyImplementer implements Economy {
     TheGoldEconomy plugin;
@@ -91,6 +92,11 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public double getBalance(String s) {
+        try {
+            if (Bukkit.getPlayer(UUID.fromString(s)) != null) return bank.getTotalPlayerBalance(s);
+        } catch (IllegalArgumentException e) {
+            // String is not UUID
+        }
         if (Util.isOfflinePlayer(s) != null) return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         return bank.getFakeBalance(s);
     }
@@ -103,6 +109,11 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public double getBalance(String s, String s1) {
+        try {
+            if (Bukkit.getPlayer(UUID.fromString(s)) != null) return bank.getTotalPlayerBalance(s);
+        } catch (IllegalArgumentException e) {
+            // String is not UUID
+        }
         if (Util.isOfflinePlayer(s) != null) return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         return bank.getFakeBalance(s);
     }
