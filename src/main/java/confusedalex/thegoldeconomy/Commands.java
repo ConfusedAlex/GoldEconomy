@@ -3,7 +3,6 @@ package confusedalex.thegoldeconomy;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.TownBlockType;
 import de.leonhard.storage.Yaml;
-import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -49,6 +48,16 @@ public class Commands {
 
         if (isBankingRestrictedToPlot(sender)) return;
 
+        if (amount == 0) {
+            Util.sendMessageToPlayer(bundle.getString("error.zero"), sender);
+            return;
+        }
+
+        if (amount < 0) {
+            Util.sendMessageToPlayer(bundle.getString("error.negative"), sender);
+            return;
+        }
+
         if (amount > eco.bank.getTotalPlayerBalance(senderuuid)) {
             Util.sendMessageToPlayer(bundle.getString("error.notenough"), sender);
             return;
@@ -76,14 +85,20 @@ public class Commands {
 
         if (isBankingRestrictedToPlot(player)) return;
 
-        if (Integer.parseInt(nuggets) > eco.converter.getInventoryValue(player)) {
-            Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
+        if (nuggets == null) {
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
+            eco.converter.depositAll((Player) commandSender);
             return;
         }
 
-        if (nuggets == null){
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
-            eco.converter.depositAll((Player) commandSender);
+        if (Integer.parseInt(nuggets) == 0) {
+            Util.sendMessageToPlayer(bundle.getString("error.zero"), player);
+            return;
+        } else if (Integer.parseInt(nuggets) < 0) {
+            Util.sendMessageToPlayer(bundle.getString("error.negative"), player);
+            return;
+        } else if (Integer.parseInt(nuggets) > eco.converter.getInventoryValue(player)) {
+            Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
             return;
         }
         Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
@@ -103,13 +118,18 @@ public class Commands {
             Util.sendMessageToPlayer(bundle.getString("conformation.withdrawall"), player);
             Util.sendMessageToPlayer(bundle.getString("warning.golddropped"), player);
             Util.sendMessageToPlayer(bundle.getString("confirm.withdrawall"), player);
+        } else if (Integer.parseInt(nuggets) == 0) {
+            Util.sendMessageToPlayer(bundle.getString("error.zero"), player);
+        } else if (Integer.parseInt(nuggets) < 0) {
+            Util.sendMessageToPlayer(bundle.getString("error.negative"), player);
+        } else if (Integer.parseInt(nuggets) > eco.bank.getTotalPlayerBalance(player.getUniqueId().toString())) {
+            Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
         } else if (nuggets.equals("confirm")) {
             Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.bank.getAccountBalance(player.getUniqueId().toString())), player);
             eco.converter.withdrawAll((Player) commandSender);
-        } else if (!NumberUtils.isNumber(nuggets)) {
         } else {
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.converter.getInventoryValue((Player) commandSender)), player);
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), nuggets), player);
         }
 
     }
