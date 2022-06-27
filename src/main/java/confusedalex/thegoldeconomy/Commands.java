@@ -118,15 +118,15 @@ public class Commands {
             Util.sendMessageToPlayer(bundle.getString("conformation.withdrawall"), player);
             Util.sendMessageToPlayer(bundle.getString("warning.golddropped"), player);
             Util.sendMessageToPlayer(bundle.getString("confirm.withdrawall"), player);
+        } else if (nuggets.equals("confirm")) {
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.bank.getAccountBalance(player.getUniqueId().toString())), player);
+            eco.converter.withdrawAll((Player) commandSender);
         } else if (Integer.parseInt(nuggets) == 0) {
             Util.sendMessageToPlayer(bundle.getString("error.zero"), player);
         } else if (Integer.parseInt(nuggets) < 0) {
             Util.sendMessageToPlayer(bundle.getString("error.negative"), player);
         } else if (Integer.parseInt(nuggets) > eco.bank.getTotalPlayerBalance(player.getUniqueId().toString())) {
             Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
-        } else if (nuggets.equals("confirm")) {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.bank.getAccountBalance(player.getUniqueId().toString())), player);
-            eco.converter.withdrawAll((Player) commandSender);
         } else {
             Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.converter.getInventoryValue((Player) commandSender)), player);
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
