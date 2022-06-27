@@ -76,13 +76,19 @@ public class Commands {
 
         if (isBankingRestrictedToPlot(player)) return;
 
+        if (Integer.parseInt(nuggets) > eco.converter.getInventoryValue(player)) {
+            Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
+            return;
+        }
+
         if (nuggets == null){
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
             eco.converter.depositAll((Player) commandSender);
             return;
         }
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
         eco.converter.deposit((Player) commandSender, Integer.parseInt(nuggets));
 
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
     }
 
     @CommandHook("withdraw")
@@ -98,13 +104,14 @@ public class Commands {
             Util.sendMessageToPlayer(bundle.getString("warning.golddropped"), player);
             Util.sendMessageToPlayer(bundle.getString("confirm.withdrawall"), player);
         } else if (nuggets.equals("confirm")) {
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.bank.getAccountBalance(player.getUniqueId().toString())), player);
             eco.converter.withdrawAll((Player) commandSender);
         } else if (!NumberUtils.isNumber(nuggets)) {
         } else {
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), nuggets), player);
         }
 
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.converter.getInventoryValue((Player) commandSender)), player);
     }
 
     @CommandHook("set")
