@@ -5,14 +5,14 @@ bank {
         hook balance
     }
 
-    deposit string:gold?* {
+    deposit string:gold/all?* {
         help deposits money
         hook deposit
         user player
 
     }
 
-    withdraw string:gold?* {
+    withdraw string:gold/all?* {
         help withdraws money
         hook withdraw
         user player
