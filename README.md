@@ -1,6 +1,9 @@
 ![Spiget Downloads](https://img.shields.io/spiget/downloads/102242?style=for-the-badge)
 ![Spiget Rating](https://img.shields.io/spiget/rating/102242?style=for-the-badge)
 ![Spiget tested server versions](https://img.shields.io/spiget/tested-versions/102242?style=for-the-badge)
+
+![image](https://user-images.githubusercontent.com/29258035/208372157-7ebad587-6c32-493f-8f45-4786432db824.png)
+
 ## Introduction
 TheGoldEconomy is a gold based Economy plugin that's lightweight, easy to configure and just works.
 ## Table of Contents
