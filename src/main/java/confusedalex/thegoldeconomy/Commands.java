@@ -101,7 +101,7 @@ public class Commands {
             Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
             return;
         }
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
+        Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), Integer.parseInt(nuggets)), player);
         eco.converter.deposit((Player) commandSender, Integer.parseInt(nuggets));
 
     }
