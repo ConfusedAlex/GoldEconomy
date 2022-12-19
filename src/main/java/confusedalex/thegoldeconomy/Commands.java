@@ -125,7 +125,7 @@ public class Commands {
         } else if (Integer.parseInt(nuggets) > eco.bank.getAccountBalance(player.getUniqueId().toString())) {
             Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
         } else {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.converter.getInventoryValue((Player) commandSender)), player);
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), Integer.parseInt(nuggets)), player);
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
         }
 
