@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class Converter {
@@ -83,12 +84,39 @@ public class Converter {
     }
 
     public void give(Player player, int value){
-        player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/81));
+        boolean warning = false;
+
+        HashMap<Integer, ItemStack> blocks = player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/81));
+        for (ItemStack item : blocks.values()) {
+            if (item != null && item.getType() == Material.GOLD_BLOCK && item.getAmount() > 0) {
+                player.getWorld().dropItem(player.getLocation(), item);
+                warning = true;
+            }
+        }
+
         value -= (value/81)*81;
-        player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value/9));
+
+        HashMap<Integer, ItemStack> ingots = player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value/9));
+        for (ItemStack item : ingots.values()) {
+            if (item != null && item.getType() == Material.GOLD_INGOT && item.getAmount() > 0) {
+                player.getWorld().dropItem(player.getLocation(), item);
+                warning = true;
+            }
+        }
+
         value -= (value/9)*9;
-        player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
+
+        HashMap<Integer, ItemStack> nuggets = player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
+        for (ItemStack item : nuggets.values()) {
+            if (item != null && item.getType() == Material.GOLD_NUGGET && item.getAmount() > 0) {
+                player.getWorld().dropItem(player.getLocation(), item);
+                warning = true;
+            }
+        }
+
+        if (warning) Util.sendMessageToPlayer(String.format(bundle.getString("warning.drops")), player);
     }
+
 
     public void withdrawAll(Player player){
         String uuid = player.getUniqueId().toString();
