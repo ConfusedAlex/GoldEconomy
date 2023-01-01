@@ -20,9 +20,9 @@ public class Converter {
     }
 
     public int getValue(Material material) {
-        if (material.equals(Material.GOLD_NUGGET)) return 1;
-        if (material.equals(Material.GOLD_INGOT)) return 9;
-        if (material.equals(Material.GOLD_BLOCK)) return 81;
+        if (material.equals(Material.GOLD_NUGGET)) return 0;
+        if (material.equals(Material.GOLD_INGOT)) return 1;
+        if (material.equals(Material.GOLD_BLOCK)) return 9;
 
         return 0;
     }
@@ -86,7 +86,7 @@ public class Converter {
     public void give(Player player, int value){
         boolean warning = false;
 
-        HashMap<Integer, ItemStack> blocks = player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/81));
+        HashMap<Integer, ItemStack> blocks = player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/9));
         for (ItemStack item : blocks.values()) {
             if (item != null && item.getType() == Material.GOLD_BLOCK && item.getAmount() > 0) {
                 player.getWorld().dropItem(player.getLocation(), item);
@@ -94,21 +94,11 @@ public class Converter {
             }
         }
 
-        value -= (value/81)*81;
-
-        HashMap<Integer, ItemStack> ingots = player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value/9));
-        for (ItemStack item : ingots.values()) {
-            if (item != null && item.getType() == Material.GOLD_INGOT && item.getAmount() > 0) {
-                player.getWorld().dropItem(player.getLocation(), item);
-                warning = true;
-            }
-        }
-
         value -= (value/9)*9;
 
-        HashMap<Integer, ItemStack> nuggets = player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
-        for (ItemStack item : nuggets.values()) {
-            if (item != null && item.getType() == Material.GOLD_NUGGET && item.getAmount() > 0) {
+        HashMap<Integer, ItemStack> ingots = player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value));
+        for (ItemStack item : ingots.values()) {
+            if (item != null && item.getType() == Material.GOLD_INGOT && item.getAmount() > 0) {
                 player.getWorld().dropItem(player.getLocation(), item);
                 warning = true;
             }
@@ -128,18 +118,18 @@ public class Converter {
         give(player, value);
     }
 
-    public void withdraw(Player player, int nuggets){
+    public void withdraw(Player player, int blocks){
         String uuid = player.getUniqueId().toString();
         int oldbalance = eco.bank.getAccountBalance(player.getUniqueId().toString());
 
         // Checks balance in HashMap
-        if (nuggets > eco.bank.getPlayerBank().get(player.getUniqueId().toString())) {
+        if (blocks > eco.bank.getPlayerBank().get(player.getUniqueId().toString())) {
             Util.sendMessageToPlayer(bundle.getString("error.notenoughmoneywithdraw"), player);
             return;
         }
-        eco.bank.setBalance(uuid, (oldbalance - nuggets));
+        eco.bank.setBalance(uuid, (oldbalance - blocks));
 
-        give(player, nuggets);
+        give(player, blocks);
 
     }
 
@@ -162,10 +152,10 @@ public class Converter {
 
     }
 
-    public void deposit(Player player, int nuggets){
+    public void deposit(Player player, int blocks){
         OfflinePlayer op = Bukkit.getOfflinePlayer(player.getUniqueId());
 
-        remove(player, nuggets);
-        eco.depositPlayer(op, nuggets);
+        remove(player, blocks);
+        eco.depositPlayer(op, blocks);
     }
 }

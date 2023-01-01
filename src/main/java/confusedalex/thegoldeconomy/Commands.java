@@ -80,53 +80,53 @@ public class Commands {
     }
 
     @CommandHook("deposit")
-    public void deposit(CommandSender commandSender, String nuggets){
+    public void deposit(CommandSender commandSender, String blocks){
         Player player = (Player) commandSender;
 
         if (isBankingRestrictedToPlot(player)) return;
-        if (nuggets == null) {
+        if (blocks == null) {
             Util.sendMessageToPlayer(bundle.getString("help.deposit"), player);
             return;
         }
 
-        if (nuggets.equals("all")) {
+        if (blocks.equals("all")) {
             Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
             eco.converter.depositAll((Player) commandSender);
-        } else if (Integer.parseInt(nuggets) == 0) {
+        } else if (Integer.parseInt(blocks) == 0) {
             Util.sendMessageToPlayer(bundle.getString("error.zero"), player);
-        } else if (Integer.parseInt(nuggets) < 0) {
+        } else if (Integer.parseInt(blocks) < 0) {
             Util.sendMessageToPlayer(bundle.getString("error.negative"), player);
-        } else if (Integer.parseInt(nuggets) > eco.converter.getInventoryValue(player)) {
+        } else if (Integer.parseInt(blocks) > eco.converter.getInventoryValue(player)) {
             Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
         } else {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), Integer.parseInt(nuggets)), player);
-            eco.converter.deposit((Player) commandSender, Integer.parseInt(nuggets));
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), Integer.parseInt(blocks)), player);
+            eco.converter.deposit((Player) commandSender, Integer.parseInt(blocks));
         }
 
     }
 
     @CommandHook("withdraw")
-    public void withdraw(CommandSender commandSender, String nuggets){
+    public void withdraw(CommandSender commandSender, String blocks){
         Player player = (Player) commandSender;
 
         if (isBankingRestrictedToPlot(player)) {
             return;
         }
 
-        if (nuggets == null) {
+        if (blocks == null) {
             Util.sendMessageToPlayer(bundle.getString("help.withdraw"), player);
-        } else if (nuggets.equals("all")) {
+        } else if (blocks.equals("all")) {
             Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.bank.getAccountBalance(player.getUniqueId().toString())), player);
             eco.converter.withdrawAll((Player) commandSender);
-        } else if (Integer.parseInt(nuggets) == 0) {
+        } else if (Integer.parseInt(blocks) == 0) {
             Util.sendMessageToPlayer(bundle.getString("error.zero"), player);
-        } else if (Integer.parseInt(nuggets) < 0) {
+        } else if (Integer.parseInt(blocks) < 0) {
             Util.sendMessageToPlayer(bundle.getString("error.negative"), player);
-        } else if (Integer.parseInt(nuggets) > eco.bank.getAccountBalance(player.getUniqueId().toString())) {
+        } else if (Integer.parseInt(blocks) > eco.bank.getAccountBalance(player.getUniqueId().toString())) {
             Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
         } else {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), Integer.parseInt(nuggets)), player);
-            eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), Integer.parseInt(blocks)), player);
+            eco.converter.withdraw((Player) commandSender, Integer.parseInt(blocks));
         }
 
     }

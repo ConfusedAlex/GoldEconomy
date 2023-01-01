@@ -45,17 +45,17 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public String format(double v) {
-        return v + " Gold";
+        return v + " g";
     }
 
     @Override
     public String currencyNamePlural() {
-        return "Gold";
+        return "g";
     }
 
     @Override
     public String currencyNameSingular() {
-        return "Gold";
+        return "g";
     }
 
     @Override

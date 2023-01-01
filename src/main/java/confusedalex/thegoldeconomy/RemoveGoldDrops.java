@@ -10,9 +10,6 @@ public class RemoveGoldDrops implements Listener {
 
     private boolean shouldRemove(Material material){
         switch (material){
-            case GOLD_BLOCK:
-            case GOLD_INGOT:
-            case GOLD_NUGGET:
             case GOLDEN_BOOTS:
             case GOLDEN_LEGGINGS:
             case GOLDEN_CHESTPLATE:
