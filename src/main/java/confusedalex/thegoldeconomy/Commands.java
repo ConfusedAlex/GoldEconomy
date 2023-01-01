@@ -133,10 +133,12 @@ public class Commands {
 
     @CommandHook("set")
     public void set(CommandSender commandSender, OfflinePlayer target, int gold){
-        Player player = (Player) commandSender;
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
+        }
 
         eco.bank.setBalance(target.getUniqueId().toString(), gold);
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
         Util.sendMessageToPlayer(String.format(bundle.getString("info.target.moneyset"), gold), Bukkit.getPlayer(target.getUniqueId()));
 
     }
