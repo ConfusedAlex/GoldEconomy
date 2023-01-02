@@ -17,7 +17,6 @@ public final class TheGoldEconomy extends JavaPlugin {
     EconomyImplementer eco;
     private VaultHook vaultHook;
 
-
     @Override
     public void onEnable() {
         // Config
@@ -30,12 +29,13 @@ public final class TheGoldEconomy extends JavaPlugin {
         } else if ("en_US".equals(configFile.getString("language"))) {
              bundle = ResourceBundle.getBundle("messages", Locale.US);
         } else {
-             bundle = ResourceBundle.getBundle("messages", Locale.US);
+            bundle = ResourceBundle.getBundle("messages", Locale.US);
+            getLogger().warning("Invalid language in config. Defaulting to English.");
         }
 
+        // bStats
         int pluginId = 15402;
         new Metrics(this, pluginId);
-
 
         // Vault shit
         eco = new EconomyImplementer(this, bundle);
@@ -60,11 +60,10 @@ public final class TheGoldEconomy extends JavaPlugin {
         if (configFile.getBoolean("updateCheck")) {
             new UpdateChecker(this, 102242).getVersion(version -> {
                 if (!this.getDescription().getVersion().equals(version)) {
-                    getLogger().info(bundle.getString("info.update"));
+                    getLogger().info(bundle.getString("warning.update"));
                 }
             });
         }
-
     }
 
     @Override
