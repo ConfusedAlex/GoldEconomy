@@ -5,6 +5,7 @@ updateCheck: true
 # Valid language are:
 # German: de_DE
 # English: en_US
+# Spanish: es_ES
 language: "en_US"
 # Do you want to restrict bank commands to bank plots (requires Towny)
 restrictToBankPlot: false

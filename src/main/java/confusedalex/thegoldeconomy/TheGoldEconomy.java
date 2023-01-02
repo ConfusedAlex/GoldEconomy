@@ -28,6 +28,9 @@ public final class TheGoldEconomy extends JavaPlugin {
              bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
         } else if ("en_US".equals(configFile.getString("language"))) {
              bundle = ResourceBundle.getBundle("messages", Locale.US);
+        } else if ("es_ES".equals(configFile.getString("language"))) {
+             Locale locale = new Locale("es", "ES");
+             bundle = ResourceBundle.getBundle("messages", locale);
         } else {
             bundle = ResourceBundle.getBundle("messages", Locale.US);
             getLogger().warning("Invalid language in config. Defaulting to English.");
