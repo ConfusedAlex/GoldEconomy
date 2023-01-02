@@ -156,7 +156,10 @@ public class Commands {
 
     @CommandHook("remove")
     public void remove(CommandSender commandSender, OfflinePlayer target, int gold) {
-        Player player = (Player) commandSender;
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
+        }
 
         eco.withdrawPlayer(target, gold);
         Util.sendMessageToPlayer(String.format(bundle.getString("info.target.remove"), gold), Bukkit.getPlayer(target.getUniqueId()));
