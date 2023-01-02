@@ -145,10 +145,12 @@ public class Commands {
 
     @CommandHook("add")
     public void add(CommandSender commandSender, OfflinePlayer target, int gold){
-        Player player = (Player) commandSender;
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
+        }
 
         eco.depositPlayer(target, gold);
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
         Util.sendMessageToPlayer(String.format(bundle.getString("info.target.addmoney"), gold), Bukkit.getPlayer(target.getUniqueId()));
     }
 
@@ -157,7 +159,6 @@ public class Commands {
         Player player = (Player) commandSender;
 
         eco.withdrawPlayer(target, gold);
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
         Util.sendMessageToPlayer(String.format(bundle.getString("info.target.remove"), gold), Bukkit.getPlayer(target.getUniqueId()));
     }
 }
