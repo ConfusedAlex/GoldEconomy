@@ -1,0 +1,9 @@
+name: TheGoldEconomy
+main: thegoldeconomy.TheGoldEconomy
+version: 2
+depend:
+  - Vault
+commands:
+  bank:
+    description: Bank command
+    usage: /bank

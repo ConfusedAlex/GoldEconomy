@@ -1,0 +1,6 @@
+# Do not change!
+version: 2
+# Valid: en-US, de-DE
+language: en-US
+# set to 'true' if you want to disable Gold drops by mobs like Piglins and Zombiers
+removeGoldDrops: true
