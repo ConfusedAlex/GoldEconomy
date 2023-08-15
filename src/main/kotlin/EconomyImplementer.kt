@@ -452,6 +452,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return null
     }
 
+    @Deprecated("Deprecated in Java")
     override fun createPlayerAccount(s: String): Boolean {
         if (util.isOfflinePlayer(s)) {
             util.createPlayerFile(Bukkit.getOfflinePlayer(s).uniqueId)
