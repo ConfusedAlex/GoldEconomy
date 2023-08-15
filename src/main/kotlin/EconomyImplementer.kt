@@ -1,5 +1,6 @@
 package thegoldeconomy
 
+import Util
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.economy.EconomyResponse
 import org.bukkit.Bukkit
@@ -37,6 +38,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return "Gold"
     }
 
+    @Deprecated("Deprecated in Java")
     override fun hasAccount(s: String): Boolean {
         if (util.isOfflinePlayer(s)) return true
 
@@ -52,6 +54,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return true
     }
 
+    @Deprecated("Deprecated in Java")
     override fun hasAccount(s: String, s1: String?): Boolean {
         if (util.isOfflinePlayer(s)) return true
 
@@ -67,6 +70,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return true
     }
 
+    @Deprecated("Deprecated in Java")
     override fun getBalance(playerName: String): Double {
         val player = Bukkit.getPlayer(playerName)
         if (player != null) {
@@ -84,6 +88,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return bank.getTotalPlayerBalance(offlinePlayer.uniqueId).toDouble()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun getBalance(playerName: String, world: String?): Double {
         val player = Bukkit.getPlayer(playerName)
         if (player != null) {
@@ -102,6 +107,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return bank.getTotalPlayerBalance(offlinePlayer.uniqueId).toDouble()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun has(playerName: String, v: Double): Boolean {
         return if (util.isOfflinePlayer(playerName)) {
             v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(playerName).uniqueId)
@@ -112,6 +118,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return v < bank.getTotalPlayerBalance(offlinePlayer.uniqueId)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun has(playerName: String, s1: String?, v: Double): Boolean {
         return if (util.isOfflinePlayer(playerName)) {
             v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(playerName).uniqueId)
@@ -122,6 +129,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return v < bank.getTotalPlayerBalance(offlinePlayer.uniqueId)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun withdrawPlayer(s: String, amount: Double): EconomyResponse {
         // If amount to withdraw is < 0
         if (amount < 0) return EconomyResponse(amount, 0.0, EconomyResponse.ResponseType.FAILURE, "Can't withdraw negative amount!")
@@ -213,6 +221,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
     return EconomyResponse(amount, 0.0, EconomyResponse.ResponseType.FAILURE, "")
     }
 
+    @Deprecated("Deprecated in Java")
     override fun withdrawPlayer(s: String, s1: String?, amount: Double): EconomyResponse? {
         // If amount to withdraw is < 0
         if (amount < 0) return EconomyResponse(amount, 0.0, EconomyResponse.ResponseType.FAILURE, "Can't withdraw negative amount!")
@@ -304,6 +313,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return EconomyResponse(amount, 0.0, EconomyResponse.ResponseType.FAILURE, "")
     }
 
+    @Deprecated("Deprecated in Java")
     override fun depositPlayer(s: String, amount: Double): EconomyResponse? {
         var oldBalance = 0
 
@@ -347,6 +357,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return EconomyResponse(amount, newBalance.toDouble(), EconomyResponse.ResponseType.SUCCESS, "")
     }
 
+    @Deprecated("Deprecated in Java")
     override fun depositPlayer(s: String, s1: String?, amount: Double): EconomyResponse? {
         var oldBalance = 0
 
@@ -390,6 +401,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return EconomyResponse(amount, newBalance.toDouble(), EconomyResponse.ResponseType.SUCCESS, "")
     }
 
+    @Deprecated("Deprecated in Java")
     override fun createBank(s: String?, s1: String?): EconomyResponse? {
         return null
     }
@@ -418,6 +430,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return null
     }
 
+    @Deprecated("Deprecated in Java")
     override fun isBankOwner(s: String?, s1: String?): EconomyResponse? {
         return null
     }
@@ -426,6 +439,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return null
     }
 
+    @Deprecated("Deprecated in Java")
     override fun isBankMember(s: String?, s1: String?): EconomyResponse? {
         return null
     }
@@ -452,6 +466,7 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
         return true
     }
 
+    @Deprecated("Deprecated in Java")
     override fun createPlayerAccount(s: String, s1: String?): Boolean {
         if (util.isOfflinePlayer(s)) {
             util.createPlayerFile(Bukkit.getOfflinePlayer(s).uniqueId)
