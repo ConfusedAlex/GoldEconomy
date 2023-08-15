@@ -1,5 +1,5 @@
-package thegoldeconomy
-
+import Bank
+import Util
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent

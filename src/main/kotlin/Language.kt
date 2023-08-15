@@ -1,5 +1,3 @@
-package thegoldeconomy
-
 import net.md_5.bungee.api.ChatColor.*
 import org.bukkit.entity.Player
 import java.io.File

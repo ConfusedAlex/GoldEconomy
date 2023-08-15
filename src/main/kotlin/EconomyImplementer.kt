@@ -1,6 +1,3 @@
-package thegoldeconomy
-
-import Util
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.economy.EconomyResponse
 import org.bukkit.Bukkit

@@ -1,6 +1,3 @@
-package thegoldeconomy
-
-import main.confusedalex.thegoldeconomy.RemoveGoldDrops
 //import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
