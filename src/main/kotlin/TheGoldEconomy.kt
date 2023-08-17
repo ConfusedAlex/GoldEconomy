@@ -1,4 +1,3 @@
-//import org.bstats.bukkit.Metrics
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.bukkit.Bukkit
@@ -31,7 +30,7 @@ class TheGoldEconomy: JavaPlugin() {
             Bukkit.getPluginManager().registerEvents(RemoveGoldDrops(), this)
         }
 
-//        val metrics = Metrics(this, 15402)
+        val metrics = Metrics(this, 15402)
     }
 
     override fun onDisable() {
