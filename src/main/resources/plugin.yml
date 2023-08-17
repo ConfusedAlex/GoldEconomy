@@ -1,5 +1,5 @@
 name: TheGoldEconomy
-main: thegoldeconomy.TheGoldEconomy
+main: TheGoldEconomy
 version: 2
 depend:
   - Vault
