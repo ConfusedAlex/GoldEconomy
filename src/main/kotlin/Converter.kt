@@ -19,9 +19,9 @@ class Converter {
         var value = amount
 
         player.inventory.addItem(ItemStack(Material.GOLD_BLOCK, value/81))
-        value -= value/81 * 81
+        value -= (value/81) * 81
         player.inventory.addItem(ItemStack(Material.GOLD_INGOT, value/9))
-        value -= value/9 * 9
+        value -= (value/9) * 9
         player.inventory.addItem(ItemStack(Material.GOLD_NUGGET, value))
     }
 
