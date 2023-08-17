@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.8.21"
     application
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "de.confusedalex"
@@ -17,7 +18,7 @@ dependencies {
     testImplementation(kotlin("test"))
     compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 }
 
 
