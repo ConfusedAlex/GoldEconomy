@@ -39,17 +39,6 @@ class TheGoldEconomy: JavaPlugin() {
     override fun onDisable() {
         playersFile.writeText(Json.encodeToString(bank.playerAccounts))
         fakeAccounts.writeText(Json.encodeToString(bank.fakeAccounts))
-
-
-//        for ((key, value) in bank.fakeAccounts) {
-//            util.fakeAccountsFileSet(key, value)
-//        }
-//
-//        for (player: Player in Bukkit.getOnlinePlayers()) {
-//            val uuid = player.uniqueId
-//            val balance = bank.getAccountBalance(uuid)
-//            util.playerFileSet(uuid, "balance", balance)
-//        }
     }
 
     private fun createPlayerFolder() {
