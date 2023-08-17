@@ -1,50 +1,44 @@
+import kotlinx.serialization.json.Json
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.*
+import kotlin.collections.HashMap
 
-class Bank(private val util: Util, val converter: Converter) {
-    val playerAccounts = HashMap<UUID, Int>()
-    val fakeAccounts = HashMap<String, Int>()
+class Bank(private val util: Util, val converter: Converter, val plugin : TheGoldEconomy) {
+    init {
+        util.createPlayersFile()
+        util.createFakeAccountsFile()
+    }
+    val playerAccounts : HashMap<String, Int> = Json.decodeFromString(plugin.playersFile.readText())
+    val fakeAccounts : HashMap<String, Int> = Json.decodeFromString(plugin.fakeAccounts.readText())
 
     fun getTotalPlayerBalance(uuid: UUID): Int {
         val player: Player? = Bukkit.getPlayer(uuid)
 
         if (player != null) {
-            if (playerAccounts.contains(uuid)) {
-                return playerAccounts.getValue(uuid) + converter.getInventoryValue(player)
+            if (playerAccounts.contains(uuid.toString())) {
+                return playerAccounts.getValue(uuid.toString()) + converter.getInventoryValue(player)
             }
         }
-        return util.getPlayerBalanceFromFile(uuid)
+        return playerAccounts.getValue(uuid.toString())
     }
 
     fun getAccountBalance(uuid: UUID): Int {
-        if (playerAccounts.containsKey(uuid)) return playerAccounts.getValue(uuid)
-        return util.getPlayerFile(uuid).get("balance") as Int
+        return playerAccounts.getValue(uuid.toString())
     }
 
     fun setAccountBalance(uuid: UUID, amount: Int) {
-        if (playerAccounts.containsKey(uuid)) {
-            playerAccounts[uuid] = amount
-            return
-        }
-        util.playerFileSet(uuid, "balance", amount)
+        playerAccounts[uuid.toString()] = amount
     }
 
     fun setFakeAccountBalance(s: String, amount: Int) {
-        if (fakeAccounts.containsKey(s)) {
-            fakeAccounts[s] = amount
-            return
-        }
-        util.fakeAccountsFileSet(s, amount)
+        fakeAccounts[s] = amount
     }
 
     fun getFakeBalance(s: String): Int {
-        val fakeAccountsFile = util.getFakeAccountsFile()
-
         if (fakeAccounts.containsKey(s)) return fakeAccounts.getValue(s)
-        if (fakeAccountsFile.contains(s)) return fakeAccountsFile.get(s) as Int
 
-        util.getFakeAccountsFile().set(s, 0)
+        fakeAccounts[s] = 0
         return 0
     }
 }

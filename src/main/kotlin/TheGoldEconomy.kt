@@ -1,19 +1,21 @@
 //import org.bstats.bukkit.Metrics
+import com.google.gson.Gson
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
 class TheGoldEconomy: JavaPlugin() {
+    val playersFile = File("plugins/TheGoldEconomy/players.json")
+    val fakeAccounts = File("plugins/TheGoldEconomy/fakeAccounts.json")
     private val util: Util = Util()
     private val converter: Converter = Converter()
-    private val bank: Bank = Bank(util, converter)
+    private val bank = Bank(util, converter, this)
     private lateinit var language: Language
 
     override fun onEnable() {
-        createPlayerFolder()
-        util.createFakeAccountsFile()
-
         // Config
         saveDefaultConfig()
         reloadConfig()
@@ -35,15 +37,19 @@ class TheGoldEconomy: JavaPlugin() {
     }
 
     override fun onDisable() {
-        for ((key, value) in bank.fakeAccounts) {
-            util.fakeAccountsFileSet(key, value)
-        }
+        playersFile.writeText(Json.encodeToString(bank.playerAccounts))
+        fakeAccounts.writeText(Json.encodeToString(bank.fakeAccounts))
 
-        for (player: Player in Bukkit.getOnlinePlayers()) {
-            val uuid = player.uniqueId
-            val balance = bank.getAccountBalance(uuid)
-            util.playerFileSet(uuid, "balance", balance)
-        }
+
+//        for ((key, value) in bank.fakeAccounts) {
+//            util.fakeAccountsFileSet(key, value)
+//        }
+//
+//        for (player: Player in Bukkit.getOnlinePlayers()) {
+//            val uuid = player.uniqueId
+//            val balance = bank.getAccountBalance(uuid)
+//            util.playerFileSet(uuid, "balance", balance)
+//        }
     }
 
     private fun createPlayerFolder() {

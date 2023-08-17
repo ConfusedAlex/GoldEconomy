@@ -38,11 +38,8 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
     @Deprecated("Deprecated in Java")
     override fun hasAccount(s: String): Boolean {
         if (util.isOfflinePlayer(s)) return true
-
         if (bank.fakeAccounts.containsKey(s)) return true
-        else if (util.getFakeAccountsFile().contains(s)) return true
 
-        util.getFakeAccountsFile().set(s, 0)
         bank.fakeAccounts[s] = 0
         return true
     }
@@ -54,11 +51,8 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
     @Deprecated("Deprecated in Java")
     override fun hasAccount(s: String, s1: String?): Boolean {
         if (util.isOfflinePlayer(s)) return true
-
         if (bank.fakeAccounts.containsKey(s)) return true
-        else if (util.getFakeAccountsFile().contains(s)) return true
 
-        util.getFakeAccountsFile().set(s, 0)
         bank.fakeAccounts[s] = 0
         return true
     }
@@ -452,30 +446,30 @@ class EconomyImplementer(private val util: Util, private val bank: Bank, private
     @Deprecated("Deprecated in Java")
     override fun createPlayerAccount(s: String): Boolean {
         if (util.isOfflinePlayer(s)) {
-            util.createPlayerFile(Bukkit.getOfflinePlayer(s).uniqueId)
+            bank.playerAccounts[Bukkit.getOfflinePlayer(s).uniqueId.toString()] = 0
         } else {
-            if (!util.getFakeAccountsFile().contains("s")) util.getFakeAccountsFile().set(s, 0)
+            if (!bank.fakeAccounts.contains(s)) bank.fakeAccounts[s] = 0
         }
         return true
     }
 
     override fun createPlayerAccount(offlinePlayer: OfflinePlayer): Boolean {
-        util.createPlayerFile(offlinePlayer.uniqueId)
+        bank.playerAccounts[offlinePlayer.uniqueId.toString()]
         return true
     }
 
     @Deprecated("Deprecated in Java")
     override fun createPlayerAccount(s: String, s1: String?): Boolean {
         if (util.isOfflinePlayer(s)) {
-            util.createPlayerFile(Bukkit.getOfflinePlayer(s).uniqueId)
+            bank.playerAccounts[Bukkit.getOfflinePlayer(s).uniqueId.toString()]
         } else {
-            if (!util.getFakeAccountsFile().contains("s")) util.getFakeAccountsFile().set(s, 0)
+            if (!bank.fakeAccounts.contains(s)) bank.fakeAccounts[s] = 0
         }
         return true
     }
 
     override fun createPlayerAccount(offlinePlayer: OfflinePlayer, s: String?): Boolean {
-        util.createPlayerFile(offlinePlayer.uniqueId)
+        bank.playerAccounts[offlinePlayer.uniqueId.toString()]
         return true
     }
 }

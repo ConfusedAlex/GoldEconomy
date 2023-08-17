@@ -1,5 +1,3 @@
-import Bank
-import Util
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -11,9 +9,11 @@ class Events(private var bank: Bank, private var util: Util) : Listener {
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val uuid = e.player.uniqueId
 
-        util.createPlayerFile(uuid)
+//        util.createPlayer(uuid)
 
-        bank.playerAccounts[uuid] = util.getPlayerFile(uuid).get("balance") as Int
+       if (!bank.playerAccounts.contains(uuid.toString())) {
+           bank.playerAccounts[uuid.toString()] = 0
+       }
     }
 
     @EventHandler
@@ -21,6 +21,6 @@ class Events(private var bank: Bank, private var util: Util) : Listener {
         val uuid = e.player.uniqueId
         val balance = bank.getAccountBalance(uuid)
 
-        util.playerFileSet(uuid, "balance", balance)
+//        util.playerFileSet(uuid, "balance", balance)
     }
 }
