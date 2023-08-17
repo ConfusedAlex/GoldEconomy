@@ -4,7 +4,7 @@ import org.bukkit.entity.Player
 import java.util.*
 import kotlin.collections.HashMap
 
-class Bank(private val util: Util, val converter: Converter, val plugin : TheGoldEconomy) {
+class Bank(private val util: Util, val converter: Converter, private val plugin : TheGoldEconomy) {
     init {
         util.createPlayersFile()
         util.createFakeAccountsFile()

@@ -1,9 +1,7 @@
 //import org.bstats.bukkit.Metrics
-import com.google.gson.Gson
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -23,7 +21,7 @@ class TheGoldEconomy: JavaPlugin() {
 
         language = Language(this, config.getString("language") ?: "en-US")
 
-        Bukkit.getPluginManager().registerEvents(Events(bank, util), this)
+        Bukkit.getPluginManager().registerEvents(Events(bank), this)
         this.getCommand("bank")?.setExecutor(Commands(bank, this, language))
 
         val vaultHook = VaultHook(this, EconomyImplementer(util, bank, converter))
@@ -39,10 +37,5 @@ class TheGoldEconomy: JavaPlugin() {
     override fun onDisable() {
         playersFile.writeText(Json.encodeToString(bank.playerAccounts))
         fakeAccounts.writeText(Json.encodeToString(bank.fakeAccounts))
-    }
-
-    private fun createPlayerFolder() {
-        val playerFolder = File("plugins/TheGoldEconomy/players")
-        playerFolder.mkdirs()
     }
 }
