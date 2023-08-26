@@ -1,3 +1,4 @@
+import com.google.gson.Gson
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.bstats.bukkit.Metrics
@@ -20,6 +21,14 @@ class TheGoldEconomy: JavaPlugin() {
         config.options().copyDefaults(true)
 
         language = Language(this, config.getString("language") ?: "en-US")
+
+        UpdateChecker(this).getVersion { version: String? ->
+            if (description.version == version) {
+                logger.info("There is not a new update available.")
+            } else {
+                logger.info("There is a new update available.")
+            }
+        }
 
         Bukkit.getPluginManager().registerEvents(Events(bank), this)
         this.getCommand("bank")?.setExecutor(Commands(bank, this, language))
