@@ -4,10 +4,10 @@ import org.bukkit.entity.Player
 import java.util.*
 import kotlin.collections.HashMap
 
-class Bank(private val util: Util, val converter: Converter, private val plugin : TheGoldEconomy) {
+class Bank(val converter: Converter, private val plugin : TheGoldEconomy) {
     init {
-        util.createPlayersFile()
-        util.createFakeAccountsFile()
+        Util.createPlayersFile()
+        Util.createFakeAccountsFile()
     }
     val playerAccounts : HashMap<String, Int> = Json.decodeFromString(plugin.playersFile.readText())
     val fakeAccounts : HashMap<String, Int> = Json.decodeFromString(plugin.fakeAccounts.readText())

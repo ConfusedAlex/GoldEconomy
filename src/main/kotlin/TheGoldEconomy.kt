@@ -9,7 +9,7 @@ class TheGoldEconomy: JavaPlugin() {
     val fakeAccounts = File("plugins/TheGoldEconomy/fakeAccounts.json")
     private val util: Util = Util()
     private val converter: Converter = Converter()
-    private val bank = Bank(util, converter, this)
+    private val bank = Bank(converter, this)
     private lateinit var language: Language
 
     override fun onEnable() {
