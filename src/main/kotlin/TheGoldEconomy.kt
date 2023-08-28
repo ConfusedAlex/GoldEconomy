@@ -29,7 +29,7 @@ class TheGoldEconomy: JavaPlugin() {
         }
 
         Bukkit.getPluginManager().registerEvents(Events(bank), this)
-        this.getCommand("bank")?.setExecutor(Commands(bank, this, language))
+        this.getCommand("bank")?.setExecutor(Commands(bank, this, language, util))
 
         val vaultHook = VaultHook(this, EconomyImplementer(util, bank, converter))
         vaultHook.hook()
