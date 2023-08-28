@@ -27,10 +27,10 @@ class Commands(private var bank: Bank, val plugin: TheGoldEconomy, val language:
                     if (util.isOfflinePlayer(param)) {
                         val balance = Bukkit.getPlayer(param)?.let { bank.getTotalPlayerBalance(it.uniqueId) }
                         if (balance != null) {
-                            language.send(sender, "info.balance.other", balance) // TODO
+                            language.send(sender, "info.balance.other", balance)
                         }
                     } else {
-                        language.send(sender, "error.noplayer") // TODO
+                        language.send(sender, "error.noplayer")
                     }
                 }
 
