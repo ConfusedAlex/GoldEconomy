@@ -1,9 +1,10 @@
+import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class Commands(private var bank: Bank, val plugin: TheGoldEconomy, val language: Language) : CommandExecutor {
+class Commands(private var bank: Bank, val plugin: TheGoldEconomy, val language: Language, private val util: Util) : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (args.isEmpty()) TODO("Display Help")
@@ -14,10 +15,25 @@ class Commands(private var bank: Bank, val plugin: TheGoldEconomy, val language:
 
         when (args[0].lowercase()) {
             "balance" -> {
-                val totalBalance = bank.getTotalPlayerBalance(sender.uniqueId)
-                val inventoryBalance = bank.converter.getInventoryValue(sender)
-                val accountBalance = bank.getAccountBalance(sender.uniqueId)
-                language.send(sender, "info.balance", totalBalance, accountBalance, inventoryBalance)
+                if (args.size == 1) {
+                    val totalBalance = bank.getTotalPlayerBalance(sender.uniqueId)
+                    val inventoryBalance = bank.converter.getInventoryValue(sender)
+                    val accountBalance = bank.getAccountBalance(sender.uniqueId)
+
+                    language.send(sender, "info.balance", totalBalance, accountBalance, inventoryBalance)
+                } else {
+                    val param = args[1]
+
+                    if (util.isOfflinePlayer(param)) {
+                        val balance = Bukkit.getPlayer(param)?.let { bank.getTotalPlayerBalance(it.uniqueId) }
+                        if (balance != null) {
+                            language.send(sender, "info.balance.other", balance) // TODO
+                        }
+                    } else {
+                        language.send(sender, "error.noplayer") // TODO
+                    }
+                }
+
                 return true
             }
             "withdraw" -> {
