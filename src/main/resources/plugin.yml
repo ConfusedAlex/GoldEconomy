@@ -1,6 +1,7 @@
 name: TheGoldEconomy
 main: TheGoldEconomy
 version: 2
+api-version: 1.13
 depend:
   - Vault
 commands:
