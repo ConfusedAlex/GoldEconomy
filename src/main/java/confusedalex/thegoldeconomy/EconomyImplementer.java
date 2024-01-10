@@ -15,10 +15,12 @@ public class EconomyImplementer implements Economy {
     Bank bank;
     Converter converter;
     ResourceBundle bundle;
+    Util util;
 
-    public EconomyImplementer(TheGoldEconomy plugin, ResourceBundle bundle) {
+    public EconomyImplementer(TheGoldEconomy plugin, ResourceBundle bundle, Util util) {
         this.plugin = plugin;
         this.bundle = bundle;
+        this.util = util;
         bank = new Bank(plugin, this);
         converter = new Converter(this, bundle);
     }

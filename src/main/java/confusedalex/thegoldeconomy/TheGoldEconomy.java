@@ -16,11 +16,13 @@ public final class TheGoldEconomy extends JavaPlugin {
 
     EconomyImplementer eco;
     private VaultHook vaultHook;
+    Util util;
+    Yaml configFile;
 
     @Override
     public void onEnable() {
         // Config
-        Yaml configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
+         configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
 
         // Language
         ResourceBundle bundle;
@@ -43,7 +45,8 @@ public final class TheGoldEconomy extends JavaPlugin {
         new Metrics(this, pluginId);
 
         // Vault shit
-        eco = new EconomyImplementer(this, bundle);
+        util = new Util(this);
+        eco = new EconomyImplementer(this, bundle, util);
         vaultHook = new VaultHook(this, eco);
         vaultHook.hook();
 
@@ -54,7 +57,7 @@ public final class TheGoldEconomy extends JavaPlugin {
                 .setArgTypes(offlinePlayer)
                 .parse()
                 .register("TheGoldEconomy",
-                new Commands(bundle, eco, configFile));
+                new Commands(bundle, eco, configFile, util));
 
         // Event class registering
         Bukkit.getPluginManager().registerEvents(new Events (this, eco.bank), this);

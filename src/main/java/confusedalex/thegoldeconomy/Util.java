@@ -6,6 +6,11 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class Util {
+    TheGoldEconomy plugin;
+
+    public Util(TheGoldEconomy plugin) {
+        this.plugin = plugin;
+    }
 
     public static OfflinePlayer isOfflinePlayer(String playerName) {
         for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
@@ -17,9 +22,10 @@ public class Util {
         return null;
     }
 
-    public static void sendMessageToPlayer(String message, Player player){
-        if (player == null) return;
-        player.sendMessage(ChatColor.GOLD + "[TheGoldEconomy] " + ChatColor.WHITE + ChatColor.translateAlternateColorCodes('&', message));
+    public void sendMessageToPlayer(String message, Player player) {
+        String prefix = plugin.configFile.getString("prefix");
+        if (player != null) {
+            player.sendMessage(String.format(ChatColor.GOLD + "[%s] " + ChatColor.WHITE + ChatColor.translateAlternateColorCodes('&', message), prefix));
+        }
     }
-
 }

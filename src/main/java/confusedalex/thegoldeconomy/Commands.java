@@ -16,17 +16,19 @@ public class Commands {
     ResourceBundle bundle;
     EconomyImplementer eco;
     Yaml configFile;
+    Util util;
 
-    public Commands(ResourceBundle bundle, EconomyImplementer eco, Yaml configFile) {
+    public Commands(ResourceBundle bundle, EconomyImplementer eco, Yaml configFile, Util util) {
         this.bundle = bundle;
         this.eco = eco;
         this.configFile = configFile;
+        this.util = util;
     }
 
     public boolean isBankingRestrictedToPlot(Player player){
         if (configFile.getBoolean("restrictToBankPlot")) {
             if (TownyAPI.getInstance().getTownBlock(player.getLocation()) == null || !Objects.requireNonNull(TownyAPI.getInstance().getTownBlock(player.getLocation())).getType().equals(TownBlockType.BANK)){
-                Util.sendMessageToPlayer(bundle.getString("error.bankplot"), player);
+                util.sendMessageToPlayer(bundle.getString("error.bankplot"), player);
                 return true;
             }
         }
@@ -37,7 +39,7 @@ public class Commands {
     public void balance(CommandSender commandSender) {
         Player player = (Player) commandSender;
         String uuid = player.getUniqueId().toString();
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.balance"), (int) eco.getBalance(uuid), eco.bank.getPlayerBank().get(uuid), eco.converter.getInventoryValue(player)), player);
+        util.sendMessageToPlayer(String.format(bundle.getString("info.balance"), (int) eco.getBalance(uuid), eco.bank.getPlayerBank().get(uuid), eco.converter.getInventoryValue(player)), player);
     }
 
     @CommandHook("pay")
@@ -49,30 +51,30 @@ public class Commands {
         if (isBankingRestrictedToPlot(sender)) return;
 
         if (amount == 0) {
-            Util.sendMessageToPlayer(bundle.getString("error.zero"), sender);
+            util.sendMessageToPlayer(bundle.getString("error.zero"), sender);
             return;
         }
 
         if (amount < 0) {
-            Util.sendMessageToPlayer(bundle.getString("error.negative"), sender);
+            util.sendMessageToPlayer(bundle.getString("error.negative"), sender);
             return;
         }
 
         if (amount > eco.bank.getTotalPlayerBalance(senderuuid)) {
-            Util.sendMessageToPlayer(bundle.getString("error.notenough"), sender);
+            util.sendMessageToPlayer(bundle.getString("error.notenough"), sender);
             return;
         } else if (senderuuid.equals(targetuuid)){
-            Util.sendMessageToPlayer(bundle.getString("error.payyourself"), sender);
+            util.sendMessageToPlayer(bundle.getString("error.payyourself"), sender);
             return;
         } else if (Util.isOfflinePlayer(target.getName()) == null) {
-            Util.sendMessageToPlayer(bundle.getString("error.noplayer"), sender);
+            util.sendMessageToPlayer(bundle.getString("error.noplayer"), sender);
             return;
         }
 
         eco.withdrawPlayer(sender, amount);
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
+        util.sendMessageToPlayer(String.format(bundle.getString("info.sendmoneyto"), amount, target.getName()), sender);
         if (target.isOnline()) {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
+            util.sendMessageToPlayer(String.format(bundle.getString("info.moneyreceived"), amount, sender.getName()), Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId())));
             eco.bank.setBalance(target.getUniqueId().toString(), eco.bank.getTotalPlayerBalance(targetuuid) + amount);
         } else {
             eco.depositPlayer(target, eco.bank.getTotalPlayerBalance(targetuuid) + amount);
@@ -85,21 +87,21 @@ public class Commands {
 
         if (isBankingRestrictedToPlot(player)) return;
         if (nuggets == null) {
-            Util.sendMessageToPlayer(bundle.getString("help.deposit"), player);
+            util.sendMessageToPlayer(bundle.getString("help.deposit"), player);
             return;
         }
 
         if (nuggets.equals("all")) {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
+            util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
             eco.converter.depositAll((Player) commandSender);
         } else if (Integer.parseInt(nuggets) == 0) {
-            Util.sendMessageToPlayer(bundle.getString("error.zero"), player);
+            util.sendMessageToPlayer(bundle.getString("error.zero"), player);
         } else if (Integer.parseInt(nuggets) < 0) {
-            Util.sendMessageToPlayer(bundle.getString("error.negative"), player);
+            util.sendMessageToPlayer(bundle.getString("error.negative"), player);
         } else if (Integer.parseInt(nuggets) > eco.converter.getInventoryValue(player)) {
-            Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
+            util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
         } else {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), Integer.parseInt(nuggets)), player);
+            util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), Integer.parseInt(nuggets)), player);
             eco.converter.deposit((Player) commandSender, Integer.parseInt(nuggets));
         }
 
@@ -114,18 +116,18 @@ public class Commands {
         }
 
         if (nuggets == null) {
-            Util.sendMessageToPlayer(bundle.getString("help.withdraw"), player);
+            util.sendMessageToPlayer(bundle.getString("help.withdraw"), player);
         } else if (nuggets.equals("all")) {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.bank.getAccountBalance(player.getUniqueId().toString())), player);
+            util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.bank.getAccountBalance(player.getUniqueId().toString())), player);
             eco.converter.withdrawAll((Player) commandSender);
         } else if (Integer.parseInt(nuggets) == 0) {
-            Util.sendMessageToPlayer(bundle.getString("error.zero"), player);
+            util.sendMessageToPlayer(bundle.getString("error.zero"), player);
         } else if (Integer.parseInt(nuggets) < 0) {
-            Util.sendMessageToPlayer(bundle.getString("error.negative"), player);
+            util.sendMessageToPlayer(bundle.getString("error.negative"), player);
         } else if (Integer.parseInt(nuggets) > eco.bank.getAccountBalance(player.getUniqueId().toString())) {
-            Util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
+            util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
         } else {
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), Integer.parseInt(nuggets)), player);
+            util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), Integer.parseInt(nuggets)), player);
             eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
         }
 
@@ -135,11 +137,11 @@ public class Commands {
     public void set(CommandSender commandSender, OfflinePlayer target, int gold){
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
+            util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
         }
 
         eco.bank.setBalance(target.getUniqueId().toString(), gold);
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.target.moneyset"), gold), Bukkit.getPlayer(target.getUniqueId()));
+        util.sendMessageToPlayer(String.format(bundle.getString("info.target.moneyset"), gold), Bukkit.getPlayer(target.getUniqueId()));
 
     }
 
@@ -147,22 +149,22 @@ public class Commands {
     public void add(CommandSender commandSender, OfflinePlayer target, int gold){
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
+            util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
         }
 
         eco.depositPlayer(target, gold);
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.target.addmoney"), gold), Bukkit.getPlayer(target.getUniqueId()));
+        util.sendMessageToPlayer(String.format(bundle.getString("info.target.addmoney"), gold), Bukkit.getPlayer(target.getUniqueId()));
     }
 
     @CommandHook("remove")
     public void remove(CommandSender commandSender, OfflinePlayer target, int gold) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            Util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
+            util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
         }
 
         eco.withdrawPlayer(target, gold);
-        Util.sendMessageToPlayer(String.format(bundle.getString("info.target.remove"), gold), Bukkit.getPlayer(target.getUniqueId()));
+        util.sendMessageToPlayer(String.format(bundle.getString("info.target.remove"), gold), Bukkit.getPlayer(target.getUniqueId()));
     }
 }
 

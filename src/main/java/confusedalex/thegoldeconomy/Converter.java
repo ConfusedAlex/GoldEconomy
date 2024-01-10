@@ -114,7 +114,7 @@ public class Converter {
             }
         }
 
-        if (warning) Util.sendMessageToPlayer(String.format(bundle.getString("warning.drops")), player);
+        if (warning) eco.util.sendMessageToPlayer(String.format(bundle.getString("warning.drops")), player);
     }
 
 
@@ -134,7 +134,7 @@ public class Converter {
 
         // Checks balance in HashMap
         if (nuggets > eco.bank.getPlayerBank().get(player.getUniqueId().toString())) {
-            Util.sendMessageToPlayer(bundle.getString("error.notenoughmoneywithdraw"), player);
+            eco.util.sendMessageToPlayer(bundle.getString("error.notenoughmoneywithdraw"), player);
             return;
         }
         eco.bank.setBalance(uuid, (oldbalance - nuggets));
