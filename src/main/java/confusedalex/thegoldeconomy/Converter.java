@@ -113,7 +113,7 @@ public class Converter {
 
         value -= (value/ingotValue)*ingotValue;
 
-        if (eco.plugin.getConfig().getString("base") == "nuggets") {
+        if (eco.plugin.getConfig().getString("base").equals("nuggets")) {
             HashMap<Integer, ItemStack> nuggets = player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
             for (ItemStack item : nuggets.values()) {
                 if (item != null && item.getType() == Material.GOLD_NUGGET && item.getAmount() > 0) {
@@ -163,7 +163,7 @@ public class Converter {
             if (isNotGold(material)) continue;
 
             value = value + (getValue(material) * item.getAmount());
-            item.setAmount(0);
+            if (getValue(material) != 0) item.setAmount(0);
             item.setType(Material.AIR);
         }
 
