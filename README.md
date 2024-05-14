@@ -16,6 +16,7 @@ TheGoldEconomy is a gold based Economy plugin that's lightweight, easy to config
 
 ## Features
 - Easy to use.
+- Use nuggets or ingots as your base!
 - Towny and Vault support.
 - TownyAPI Integration!
 - Optional removing of Gold Drops by Mobs to reduce inflation.
