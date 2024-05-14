@@ -20,10 +20,14 @@ public class Converter {
     }
 
     public int getValue(Material material) {
-        if (material.equals(Material.GOLD_NUGGET)) return 1;
-        if (material.equals(Material.GOLD_INGOT)) return 9;
-        if (material.equals(Material.GOLD_BLOCK)) return 81;
-
+        if (eco.plugin.getConfig().getString("base").equals("nuggets")) {
+            if (material.equals(Material.GOLD_NUGGET)) return 1;
+            if (material.equals(Material.GOLD_INGOT)) return 9;
+            if (material.equals(Material.GOLD_BLOCK)) return 81;
+        } else {
+            if (material.equals(Material.GOLD_INGOT)) return 1;
+            if (material.equals(Material.GOLD_BLOCK)) return 9;
+        }
         return 0;
     }
 
@@ -86,7 +90,10 @@ public class Converter {
     public void give(Player player, int value){
         boolean warning = false;
 
-        HashMap<Integer, ItemStack> blocks = player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/81));
+        int blockValue = getValue(Material.GOLD_BLOCK);
+        int ingotValue = getValue(Material.GOLD_INGOT);
+
+        HashMap<Integer, ItemStack> blocks = player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/blockValue));
         for (ItemStack item : blocks.values()) {
             if (item != null && item.getType() == Material.GOLD_BLOCK && item.getAmount() > 0) {
                 player.getWorld().dropItem(player.getLocation(), item);
@@ -94,9 +101,9 @@ public class Converter {
             }
         }
 
-        value -= (value/81)*81;
+        value -= (value/blockValue)*blockValue;
 
-        HashMap<Integer, ItemStack> ingots = player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value/9));
+        HashMap<Integer, ItemStack> ingots = player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value/ingotValue));
         for (ItemStack item : ingots.values()) {
             if (item != null && item.getType() == Material.GOLD_INGOT && item.getAmount() > 0) {
                 player.getWorld().dropItem(player.getLocation(), item);
@@ -104,13 +111,15 @@ public class Converter {
             }
         }
 
-        value -= (value/9)*9;
+        value -= (value/ingotValue)*ingotValue;
 
-        HashMap<Integer, ItemStack> nuggets = player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
-        for (ItemStack item : nuggets.values()) {
-            if (item != null && item.getType() == Material.GOLD_NUGGET && item.getAmount() > 0) {
-                player.getWorld().dropItem(player.getLocation(), item);
-                warning = true;
+        if (eco.plugin.getConfig().getString("base") == "nuggets") {
+            HashMap<Integer, ItemStack> nuggets = player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
+            for (ItemStack item : nuggets.values()) {
+                if (item != null && item.getType() == Material.GOLD_NUGGET && item.getAmount() > 0) {
+                    player.getWorld().dropItem(player.getLocation(), item);
+                    warning = true;
+                }
             }
         }
 
