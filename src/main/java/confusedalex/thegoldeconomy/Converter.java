@@ -93,27 +93,31 @@ public class Converter {
         int blockValue = getValue(Material.GOLD_BLOCK);
         int ingotValue = getValue(Material.GOLD_INGOT);
 
-        HashMap<Integer, ItemStack> blocks = player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value/blockValue));
-        for (ItemStack item : blocks.values()) {
-            if (item != null && item.getType() == Material.GOLD_BLOCK && item.getAmount() > 0) {
-                player.getWorld().dropItem(player.getLocation(), item);
-                warning = true;
+        if (value/blockValue > 0) {
+            HashMap<Integer, ItemStack> blocks = player.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, value / blockValue));
+            for (ItemStack item : blocks.values()) {
+                if (item != null && item.getType() == Material.GOLD_BLOCK && item.getAmount() > 0) {
+                    player.getWorld().dropItem(player.getLocation(), item);
+                    warning = true;
+                }
             }
         }
 
         value -= (value/blockValue)*blockValue;
 
-        HashMap<Integer, ItemStack> ingots = player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value/ingotValue));
-        for (ItemStack item : ingots.values()) {
-            if (item != null && item.getType() == Material.GOLD_INGOT && item.getAmount() > 0) {
-                player.getWorld().dropItem(player.getLocation(), item);
-                warning = true;
+        if (value/ingotValue > 0) {
+            HashMap<Integer, ItemStack> ingots = player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, value / ingotValue));
+            for (ItemStack item : ingots.values()) {
+                if (item != null && item.getType() == Material.GOLD_INGOT && item.getAmount() > 0) {
+                    player.getWorld().dropItem(player.getLocation(), item);
+                    warning = true;
+                }
             }
         }
 
         value -= (value/ingotValue)*ingotValue;
 
-        if (eco.plugin.getConfig().getString("base").equals("nuggets")) {
+        if (eco.plugin.getConfig().getString("base").equals("nuggets") && value > 0) {
             HashMap<Integer, ItemStack> nuggets = player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
             for (ItemStack item : nuggets.values()) {
                 if (item != null && item.getType() == Material.GOLD_NUGGET && item.getAmount() > 0) {
