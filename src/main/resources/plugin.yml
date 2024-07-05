@@ -8,5 +8,7 @@ api-version: 1.18
 # Data
 load: STARTUP
 main: confusedalex.thegoldeconomy.TheGoldEconomy
+softdepend:
+  - PlaceholderAPI
 loadbefore: [Towny]
 depend: [Vault]
