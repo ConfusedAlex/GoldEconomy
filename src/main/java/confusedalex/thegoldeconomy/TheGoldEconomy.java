@@ -24,7 +24,7 @@ public final class TheGoldEconomy extends JavaPlugin {
         // Config
          configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
 
-         if (!configFile.getString("base").equals("nuggets") && !configFile.getString("base").equals("ingots")) {
+        if (!configFile.getString("base").equals("nuggets") && !configFile.getString("base").equals("ingots")) {
              getLogger().severe("The base is not correctly defined in the config file! Only the values 'nuggets' and 'ingots' are allowed! \n"
                      + "If you don't have the base option in your config file, add: base: \"nuggets\" or \"ingots\"");
              getServer().shutdown();
@@ -80,6 +80,10 @@ public final class TheGoldEconomy extends JavaPlugin {
                     getLogger().info(bundle.getString("warning.update"));
                 }
             });
+        }
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new Placeholders(this).register();
         }
     }
 
