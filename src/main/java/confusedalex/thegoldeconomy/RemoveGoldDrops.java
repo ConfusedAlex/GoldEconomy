@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 public class RemoveGoldDrops implements Listener {
 
-    private boolean shouldRemove(Material material){
-        switch (material){
+    private boolean shouldRemove(Material material) {
+        switch (material) {
             case GOLD_BLOCK:
             case GOLD_INGOT:
             case GOLD_NUGGET:
@@ -29,7 +29,7 @@ public class RemoveGoldDrops implements Listener {
     }
 
     @EventHandler
-    public void entityDeathEvent(EntityDeathEvent e){
+    public void entityDeathEvent(EntityDeathEvent e) {
         if (e.getEntityType().equals(EntityType.PLAYER)) return;
 
         e.getDrops().removeIf(item -> shouldRemove(item.getType()));

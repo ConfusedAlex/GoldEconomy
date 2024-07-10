@@ -30,7 +30,7 @@ public class Placeholders extends PlaceholderExpansion {
     public boolean persist() {
         return true;
     }
-    
+
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.equalsIgnoreCase("inventoryBalance")) {
@@ -41,9 +41,9 @@ public class Placeholders extends PlaceholderExpansion {
             return Integer.toString(plugin.eco.bank.getAccountBalance(player.getUniqueId().toString()));
         }
 
-       if (params.equalsIgnoreCase("totalBalance")) {
-           return Integer.toString(plugin.eco.bank.getTotalPlayerBalance(player.getUniqueId().toString()));
-       }
+        if (params.equalsIgnoreCase("totalBalance")) {
+            return Integer.toString(plugin.eco.bank.getTotalPlayerBalance(player.getUniqueId().toString()));
+        }
 
         return null;
     }

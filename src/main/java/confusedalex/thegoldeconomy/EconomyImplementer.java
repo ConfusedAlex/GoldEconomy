@@ -99,7 +99,8 @@ public class EconomyImplementer implements Economy {
         } catch (IllegalArgumentException e) {
             // String is not UUID
         }
-        if (Util.isOfflinePlayer(s) != null) return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
+        if (Util.isOfflinePlayer(s) != null)
+            return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         return bank.getFakeBalance(s);
     }
 
@@ -116,7 +117,8 @@ public class EconomyImplementer implements Economy {
         } catch (IllegalArgumentException e) {
             // String is not UUID
         }
-        if (Util.isOfflinePlayer(s) != null) return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
+        if (Util.isOfflinePlayer(s) != null)
+            return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         return bank.getFakeBalance(s);
     }
 
@@ -128,7 +130,8 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public boolean has(String s, double v) {
-        if (Util.isOfflinePlayer(s) != null) return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
+        if (Util.isOfflinePlayer(s) != null)
+            return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         else return v < bank.getFakeBalance(s);
     }
 
@@ -139,7 +142,8 @@ public class EconomyImplementer implements Economy {
 
     @Override
     public boolean has(String s, String s1, double v) {
-        if (Util.isOfflinePlayer(s) != null) return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
+        if (Util.isOfflinePlayer(s) != null)
+            return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
         else return v < bank.getFakeBalance(s);
     }
 
@@ -214,7 +218,8 @@ public class EconomyImplementer implements Economy {
         if (offlinePlayer.isOnline()) {
             player = offlinePlayer.getPlayer();
 
-            if (player == null) return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+            if (player == null)
+                return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
             // get Balance and InventoryValue
             int oldBankBalance = bank.getAccountBalance(uuid);
@@ -298,7 +303,7 @@ public class EconomyImplementer implements Economy {
     }
 
     @Override
-    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String s, double amount){
+    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String s, double amount) {
         String uuid = offlinePlayer.getUniqueId().toString();
         Player player;
         int oldBalance = 0;
@@ -310,7 +315,8 @@ public class EconomyImplementer implements Economy {
         if (offlinePlayer.isOnline()) {
             player = offlinePlayer.getPlayer();
 
-            if (player == null) return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
+            if (player == null)
+                return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
             // get Balance and InventoryValue
             int oldBankBalance = bank.getAccountBalance(uuid);

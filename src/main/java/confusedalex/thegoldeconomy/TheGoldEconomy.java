@@ -22,13 +22,13 @@ public final class TheGoldEconomy extends JavaPlugin {
     @Override
     public void onEnable() {
         // Config
-         configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
+        configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
 
         if (!configFile.getString("base").equals("nuggets") && !configFile.getString("base").equals("ingots")) {
-             getLogger().severe("The base is not correctly defined in the config file! Only the values 'nuggets' and 'ingots' are allowed! \n"
-                     + "If you don't have the base option in your config file, add: base: \"nuggets\" or \"ingots\"");
-             getServer().shutdown();
-         }
+            getLogger().severe("The base is not correctly defined in the config file! Only the values 'nuggets' and 'ingots' are allowed! \n"
+                    + "If you don't have the base option in your config file, add: base: \"nuggets\" or \"ingots\"");
+            getServer().shutdown();
+        }
 
         // Language
         ResourceBundle bundle;
@@ -66,12 +66,13 @@ public final class TheGoldEconomy extends JavaPlugin {
                 .setArgTypes(offlinePlayer)
                 .parse()
                 .register("TheGoldEconomy",
-                new Commands(bundle, eco, configFile, util));
+                        new Commands(bundle, eco, configFile, util));
 
         // Event class registering
-        Bukkit.getPluginManager().registerEvents(new Events (this, eco.bank), this);
+        Bukkit.getPluginManager().registerEvents(new Events(this, eco.bank), this);
         // If removeGoldDrop is true, register Listener
-        if (configFile.getBoolean("removeGoldDrop")) Bukkit.getPluginManager().registerEvents(new RemoveGoldDrops(), this);
+        if (configFile.getBoolean("removeGoldDrop"))
+            Bukkit.getPluginManager().registerEvents(new RemoveGoldDrops(), this);
 
         // Update Checker
         if (configFile.getBoolean("updateCheck")) {
@@ -90,7 +91,7 @@ public final class TheGoldEconomy extends JavaPlugin {
     @Override
     public void onDisable() {
         // Save player HashMap to File
-        for(Map.Entry<String, Integer> entry : eco.bank.getPlayerBank().entrySet()) {
+        for (Map.Entry<String, Integer> entry : eco.bank.getPlayerBank().entrySet()) {
             String key = entry.getKey();
             int value = entry.getValue();
 
@@ -99,7 +100,7 @@ public final class TheGoldEconomy extends JavaPlugin {
         eco.bank.getBalanceFile().write();
 
         // Save FakeAccount HashMap to File
-        for(Map.Entry<String, Integer> entry : eco.bank.getFakeAccounts().entrySet()) {
+        for (Map.Entry<String, Integer> entry : eco.bank.getFakeAccounts().entrySet()) {
             String key = entry.getKey();
             int value = entry.getValue();
 

@@ -22,13 +22,13 @@ public class Bank {
         fakeAccounts = new HashMap<>();
     }
 
-    public int getTotalPlayerBalance(String uuid){
-        if (playerBank.containsKey(uuid)) return playerBank.get(uuid) + eco.converter.getInventoryValue(Objects.requireNonNull(Bukkit.getPlayer(UUID.fromString(uuid))));
+    public int getTotalPlayerBalance(String uuid) {
+        if (playerBank.containsKey(uuid))
+            return playerBank.get(uuid) + eco.converter.getInventoryValue(Objects.requireNonNull(Bukkit.getPlayer(UUID.fromString(uuid))));
         else return balanceFile.getInt(uuid);
-
     }
-    
-    public int getFakeBalance(String s){
+
+    public int getFakeBalance(String s) {
         if (fakeAccounts.containsKey(s)) return fakeAccounts.get(s);
         else if (fakeAccountsFile.contains(s)) return fakeAccountsFile.getInt(s);
 
@@ -37,17 +37,16 @@ public class Bank {
         return getFakeBalance(s);
     }
 
-    public int getAccountBalance(String uuid){
+    public int getAccountBalance(String uuid) {
         if (playerBank.containsKey(uuid)) return playerBank.get(uuid);
         else return balanceFile.getInt(uuid);
     }
 
-    public void setBalance(String uuid, int balance){
+    public void setBalance(String uuid, int balance) {
         if (playerBank.containsKey(uuid)) playerBank.put(uuid, balance);
         else if (balanceFile.contains(uuid)) balanceFile.set(uuid, balance);
-        else if (fakeAccounts.containsKey(uuid))  fakeAccounts.put(uuid, balance);
-        else if (fakeAccountsFile.contains(uuid))  fakeAccountsFile.set(uuid, balance);
-
+        else if (fakeAccounts.containsKey(uuid)) fakeAccounts.put(uuid, balance);
+        else if (fakeAccountsFile.contains(uuid)) fakeAccountsFile.set(uuid, balance);
     }
 
     public Json getBalanceFile() {
