@@ -35,7 +35,6 @@ public final class TheGoldEconomy extends JavaPlugin {
         // Language
         ResourceBundle bundle;
         String language = configFile.getString("language");
-        getLogger().info("Language is" + language);
         HashMap<String, Locale> localeMap = new HashMap<>();
         localeMap.put("de_DE", Locale.GERMANY);
         localeMap.put("en_US", Locale.US);
@@ -47,7 +46,6 @@ public final class TheGoldEconomy extends JavaPlugin {
 
         if (localeMap.containsKey(language)) {
             bundle = ResourceBundle.getBundle("messages", localeMap.get(language));
-            getLogger().info("Language is" + bundle.getLocale());
         } else {
             bundle = ResourceBundle.getBundle("messages", Locale.US);
             getLogger().warning("Invalid language in config. Defaulting to English.");
