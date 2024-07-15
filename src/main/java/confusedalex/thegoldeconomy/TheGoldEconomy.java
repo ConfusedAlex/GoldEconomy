@@ -1,6 +1,7 @@
 package confusedalex.thegoldeconomy;
 
 import de.leonhard.storage.Yaml;
+import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import redempt.redlib.commandmanager.ArgType;
 import redempt.redlib.commandmanager.CommandParser;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -32,21 +34,20 @@ public final class TheGoldEconomy extends JavaPlugin {
 
         // Language
         ResourceBundle bundle;
-        if ("de_DE".equals(configFile.getString("language"))) {
-            bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
-        } else if ("en_US".equals(configFile.getString("language"))) {
-            bundle = ResourceBundle.getBundle("messages", Locale.US);
-        } else if ("zh_CN".equals(configFile.getString("language"))) {
-            bundle = ResourceBundle.getBundle("messages", Locale.SIMPLIFIED_CHINESE);
-        } else if ("es_ES".equals(configFile.getString("language"))) {
-            Locale locale = new Locale("es", "ES");
-            bundle = ResourceBundle.getBundle("messages", locale);
-        } else if ("tr_TR".equals(configFile.getString("language"))) {
-            Locale locale = new Locale("tr", "TR");
-            bundle = ResourceBundle.getBundle("messages", locale);
-        } else if ("pt_BR".equals(configFile.getString("language"))) {
-            Locale locale = new Locale("pt", "BR");
-            bundle = ResourceBundle.getBundle("messages", locale);
+        String language = configFile.getString("language");
+        getLogger().info("Language is" + language);
+        HashMap<String, Locale> localeMap = new HashMap<>();
+        localeMap.put("de_DE", Locale.GERMANY);
+        localeMap.put("en_US", Locale.US);
+        localeMap.put("zh_CN", Locale.SIMPLIFIED_CHINESE);
+        localeMap.put("es_ES", LocaleUtils.toLocale("es_ES"));
+        localeMap.put("tr_TR", LocaleUtils.toLocale("tr_TR"));
+        localeMap.put("pt_BR", LocaleUtils.toLocale("pt_BR"));
+        localeMap.put("nb_NO", LocaleUtils.toLocale("nb_NO"));
+
+        if (localeMap.containsKey(language)) {
+            bundle = ResourceBundle.getBundle("messages", localeMap.get(language));
+            getLogger().info("Language is" + bundle.getLocale());
         } else {
             bundle = ResourceBundle.getBundle("messages", Locale.US);
             getLogger().warning("Invalid language in config. Defaulting to English.");
