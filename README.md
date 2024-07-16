@@ -1,7 +1,7 @@
-![Spiget Downloads](https://img.shields.io/spiget/downloads/102242?style=for-the-badge)
-![Spiget Rating](https://img.shields.io/spiget/rating/102242?style=for-the-badge)
-![Spiget tested server versions](https://img.shields.io/spiget/tested-versions/102242?style=for-the-badge)
-![Weblate project translated](https://img.shields.io/weblate/progress/thegoldeconomy?style=for-the-badge)
+![Spiget Downloads](https://img.shields.io/spiget/downloads/102242)
+![Spiget Rating](https://img.shields.io/spiget/rating/102242)
+![Spiget tested server versions](https://img.shields.io/spiget/tested-versions/102242)
+![Weblate project translated](https://img.shields.io/weblate/progress/thegoldeconomy)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FConfusedAlex%2FGoldEconomy.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FConfusedAlex%2FGoldEconomy?ref=badge_shield)
 
 ![image](https://user-images.githubusercontent.com/29258035/208372157-7ebad587-6c32-493f-8f45-4786432db824.png)
