@@ -6,7 +6,7 @@
 
     <groupId>ConfusedAlex</groupId>
     <artifactId>TheGoldEconomy</artifactId>
-    <version>1.6.4</version>
+    <version>1.6.5</version>
     <packaging>jar</packaging>
 
     <name>TheGoldEconomy</name>
