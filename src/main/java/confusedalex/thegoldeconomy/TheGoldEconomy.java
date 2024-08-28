@@ -26,13 +26,6 @@ public final class TheGoldEconomy extends JavaPlugin {
     // Config
     configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
 
-    if (!configFile.getString("base").equals("nuggets") && !configFile.getString("base").equals("ingots")) {
-      getLogger().severe(
-              "The base is not correctly defined in the config file! Only the values 'nuggets' and 'ingots' are allowed! \n"
-                      + "If you don't have the base option in your config file, add: base: \"nuggets\" or \"ingots\"");
-      getServer().shutdown();
-    }
-
     // Language
     ResourceBundle bundle;
     String language = configFile.getString("language");
@@ -52,6 +45,12 @@ public final class TheGoldEconomy extends JavaPlugin {
       getLogger().warning("Invalid language in config. Defaulting to English.");
     }
 
+    String base = configFile.getString("base");
+    if (!base.equals("nuggets") && !base.equals("ingots") && !base.equals("raw")) {
+      getLogger().severe(bundle.getString("error.invalidbase"));
+      getServer().shutdown();
+    }
+
     // bStats
     int pluginId = 15402;
     new Metrics(this, pluginId);
@@ -64,12 +63,12 @@ public final class TheGoldEconomy extends JavaPlugin {
 
     // Commands from RedLib
     ArgType<OfflinePlayer> offlinePlayer = new ArgType<>("offlinePlayer", Bukkit::getOfflinePlayer)
-            .tabStream(c -> Bukkit.getOnlinePlayers().stream().map(Player::getName));
+        .tabStream(c -> Bukkit.getOnlinePlayers().stream().map(Player::getName));
     new CommandParser(this.getResource("commands.rdcml"))
-            .setArgTypes(offlinePlayer)
-            .parse()
-            .register("TheGoldEconomy",
-                    new Commands(bundle, eco, configFile, util));
+        .setArgTypes(offlinePlayer)
+        .parse()
+        .register("TheGoldEconomy",
+            new Commands(bundle, eco, configFile, util));
 
     // Event class registering
     Bukkit.getPluginManager().registerEvents(new Events(this, eco.bank), this);
