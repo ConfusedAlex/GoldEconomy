@@ -13,44 +13,62 @@ public class Converter {
 
   EconomyImplementer eco;
   ResourceBundle bundle;
+  String base;
 
   public Converter(EconomyImplementer economyImplementer, ResourceBundle bundle) {
     this.eco = economyImplementer;
     this.bundle = bundle;
+    this.base = eco.plugin.getConfig().getString("base");
   }
 
   public int getValue(Material material) {
-    if (eco.plugin.getConfig().getString("base").equals("nuggets")) {
+    if (base.equals("nuggets")) {
       if (material.equals(Material.GOLD_NUGGET))
         return 1;
       if (material.equals(Material.GOLD_INGOT))
         return 9;
       if (material.equals(Material.GOLD_BLOCK))
         return 81;
-    } else {
+    } else if (base.equals("ingots")) {
       if (material.equals(Material.GOLD_INGOT))
         return 1;
       if (material.equals(Material.GOLD_BLOCK))
+        return 9;
+    } else if (base.equals("raw")) {
+      if (material.equals(Material.RAW_GOLD))
+        return 1;
+      if (material.equals(Material.RAW_GOLD_BLOCK))
         return 9;
     }
     return 0;
   }
 
   public boolean isNotGold(Material material) {
-    switch (material) {
-      case GOLD_BLOCK:
-      case GOLD_INGOT:
-      case GOLD_NUGGET:
-        return false;
-      default:
-        return true;
+    if (base.equals("ingots") || base.equals("nuggets")) {
+      switch (material) {
+        case GOLD_BLOCK:
+        case GOLD_INGOT:
+        case GOLD_NUGGET:
+          return false;
+        default:
+          return true;
+      }
+    } else if (base.equals("raw")) {
+      switch (material) {
+        case RAW_GOLD:
+        case RAW_GOLD_BLOCK:
+          return false;
+        default:
+          return true;
+      }
     }
+    return false;
   }
 
   public int getInventoryValue(Player player) {
     int value = 0;
 
-    // calculating the value of all the gold in the inventory to nuggets
+    // calculating the value of all the gold in the inventory to the base
     for (ItemStack item : player.getInventory()) {
       if (item == null)
         continue;
@@ -99,14 +117,30 @@ public class Converter {
   public void give(Player player, int value) {
     boolean warning = false;
 
-    int blockValue = getValue(Material.GOLD_BLOCK);
-    int ingotValue = getValue(Material.GOLD_INGOT);
+    int blockValue;
+    int ingotValue;
+    Material block;
+    Material ingot;
+
+    if (base.equals("ingots") || base.equals("nuggets")) {
+      blockValue = getValue(Material.GOLD_BLOCK);
+      ingotValue = getValue(Material.GOLD_INGOT);
+      block = Material.GOLD_BLOCK;
+      ingot = Material.GOLD_INGOT;
+    } else if (base.equals("raw")) {
+      blockValue = getValue(Material.RAW_GOLD_BLOCK);
+      ingotValue = getValue(Material.RAW_GOLD);
+      block = Material.RAW_GOLD_BLOCK;
+      ingot = Material.RAW_GOLD;
+    } else {
+      return;
+    }
 
     if (value / blockValue > 0) {
       HashMap<Integer, ItemStack> blocks = player.getInventory()
-              .addItem(new ItemStack(Material.GOLD_BLOCK, value / blockValue));
+          .addItem(new ItemStack(block, value / blockValue));
       for (ItemStack item : blocks.values()) {
-        if (item != null && item.getType() == Material.GOLD_BLOCK && item.getAmount() > 0) {
+        if (item != null && item.getType() == block && item.getAmount() > 0) {
           player.getWorld().dropItem(player.getLocation(), item);
           warning = true;
         }
@@ -117,9 +151,9 @@ public class Converter {
 
     if (value / ingotValue > 0) {
       HashMap<Integer, ItemStack> ingots = player.getInventory()
-              .addItem(new ItemStack(Material.GOLD_INGOT, value / ingotValue));
+          .addItem(new ItemStack(ingot, value / ingotValue));
       for (ItemStack item : ingots.values()) {
-        if (item != null && item.getType() == Material.GOLD_INGOT && item.getAmount() > 0) {
+        if (item != null && item.getType() == ingot && item.getAmount() > 0) {
           player.getWorld().dropItem(player.getLocation(), item);
           warning = true;
         }
@@ -128,7 +162,7 @@ public class Converter {
 
     value -= (value / ingotValue) * ingotValue;
 
-    if (eco.plugin.getConfig().getString("base").equals("nuggets") && value > 0) {
+    if (base.equals("nuggets") && value > 0) {
       HashMap<Integer, ItemStack> nuggets = player.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, value));
       for (ItemStack item : nuggets.values()) {
         if (item != null && item.getType() == Material.GOLD_NUGGET && item.getAmount() > 0) {
