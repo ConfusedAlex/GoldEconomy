@@ -5,6 +5,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class Util {
   TheGoldEconomy plugin;
 
@@ -12,14 +14,14 @@ public class Util {
     this.plugin = plugin;
   }
 
-  public static OfflinePlayer isOfflinePlayer(String playerName) {
+  public static Optional<OfflinePlayer> isOfflinePlayer(String playerName) {
     for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
       String name = p.getName();
       if (name != null) {
-        if (name.equals(playerName)) return p;
+        if (name.equals(playerName)) return Optional.of(p);
       }
     }
-    return null;
+    return Optional.empty();
   }
 
   public void sendMessageToPlayer(String message, Player player) {

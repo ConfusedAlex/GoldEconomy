@@ -63,7 +63,7 @@ public class Commands {
     } else if (senderuuid.equals(targetuuid)) {
       util.sendMessageToPlayer(bundle.getString("error.payyourself"), sender);
       return;
-    } else if (Util.isOfflinePlayer(target.getName()) == null) {
+    } else if (Util.isOfflinePlayer(target.getName()).isEmpty()) {
       util.sendMessageToPlayer(bundle.getString("error.noplayer"), sender);
       return;
     }
