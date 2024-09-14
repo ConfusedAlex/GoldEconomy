@@ -22,47 +22,39 @@ public class Converter {
   }
 
   public int getValue(Material material) {
-    if (base.equals("nuggets")) {
-      if (material.equals(Material.GOLD_NUGGET))
-        return 1;
-      if (material.equals(Material.GOLD_INGOT))
-        return 9;
-      if (material.equals(Material.GOLD_BLOCK))
-        return 81;
-    } else if (base.equals("ingots")) {
-      if (material.equals(Material.GOLD_INGOT))
-        return 1;
-      if (material.equals(Material.GOLD_BLOCK))
-        return 9;
-    } else if (base.equals("raw")) {
-      if (material.equals(Material.RAW_GOLD))
-        return 1;
-      if (material.equals(Material.RAW_GOLD_BLOCK))
-        return 9;
-    }
-    return 0;
+      return switch (base) {
+          case "nuggets" -> switch (material) {
+              case GOLD_NUGGET -> 1;
+              case GOLD_INGOT -> 9;
+              case GOLD_BLOCK -> 81;
+              default -> 0;
+          };
+          case "ingots" -> switch (material) {
+              case GOLD_INGOT -> 1;
+              case GOLD_BLOCK -> 9;
+              default -> 0;
+          };
+          case "raw" -> switch (material) {
+              case RAW_GOLD -> 1;
+              case RAW_GOLD_BLOCK -> 9;
+              default -> 0;
+          };
+          default -> 0;
+      };
   }
 
   public boolean isNotGold(Material material) {
-    if (base.equals("ingots") || base.equals("nuggets")) {
-      switch (material) {
-        case GOLD_BLOCK:
-        case GOLD_INGOT:
-        case GOLD_NUGGET:
-          return false;
-        default:
-          return true;
-      }
-    } else if (base.equals("raw")) {
-      switch (material) {
-        case RAW_GOLD:
-        case RAW_GOLD_BLOCK:
-          return false;
-        default:
-          return true;
-      }
-    }
-    return false;
+      return switch (base) {
+          case "ingots", "nuggets" -> switch (material) {
+              case GOLD_BLOCK, GOLD_INGOT, GOLD_NUGGET -> false;
+              default -> true;
+          };
+          case "raw" -> switch (material) {
+              case RAW_GOLD, RAW_GOLD_BLOCK -> false;
+              default -> true;
+          };
+          default -> false;
+      };
   }
 
   public int getInventoryValue(Player player) {
