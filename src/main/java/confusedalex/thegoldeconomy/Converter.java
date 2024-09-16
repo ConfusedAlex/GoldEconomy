@@ -22,39 +22,39 @@ public class Converter {
   }
 
   public int getValue(Material material) {
-      return switch (base) {
-          case "nuggets" -> switch (material) {
-              case GOLD_NUGGET -> 1;
-              case GOLD_INGOT -> 9;
-              case GOLD_BLOCK -> 81;
-              default -> 0;
-          };
-          case "ingots" -> switch (material) {
-              case GOLD_INGOT -> 1;
-              case GOLD_BLOCK -> 9;
-              default -> 0;
-          };
-          case "raw" -> switch (material) {
-              case RAW_GOLD -> 1;
-              case RAW_GOLD_BLOCK -> 9;
-              default -> 0;
-          };
-          default -> 0;
+    return switch (base) {
+      case "nuggets" -> switch (material) {
+        case GOLD_NUGGET -> 1;
+        case GOLD_INGOT -> 9;
+        case GOLD_BLOCK -> 81;
+        default -> 0;
       };
+      case "ingots" -> switch (material) {
+        case GOLD_INGOT -> 1;
+        case GOLD_BLOCK -> 9;
+        default -> 0;
+      };
+      case "raw" -> switch (material) {
+        case RAW_GOLD -> 1;
+        case RAW_GOLD_BLOCK -> 9;
+        default -> 0;
+      };
+      default -> 0;
+    };
   }
 
   public boolean isNotGold(Material material) {
-      return switch (base) {
-          case "ingots", "nuggets" -> switch (material) {
-              case GOLD_BLOCK, GOLD_INGOT, GOLD_NUGGET -> false;
-              default -> true;
-          };
-          case "raw" -> switch (material) {
-              case RAW_GOLD, RAW_GOLD_BLOCK -> false;
-              default -> true;
-          };
-          default -> false;
+    return switch (base) {
+      case "ingots", "nuggets" -> switch (material) {
+        case GOLD_BLOCK, GOLD_INGOT, GOLD_NUGGET -> false;
+        default -> true;
       };
+      case "raw" -> switch (material) {
+        case RAW_GOLD, RAW_GOLD_BLOCK -> false;
+        default -> true;
+      };
+      default -> false;
+    };
   }
 
   public int getInventoryValue(Player player) {
