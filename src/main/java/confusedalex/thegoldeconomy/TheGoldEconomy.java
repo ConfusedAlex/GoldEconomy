@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public final class TheGoldEconomy extends JavaPlugin {
-
   EconomyImplementer eco;
   private VaultHook vaultHook;
   Util util;

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class Converter {
-
   EconomyImplementer eco;
   ResourceBundle bundle;
   String base;

@@ -12,7 +12,6 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class UpdateChecker {
-
   private final JavaPlugin plugin;
   private final int resourceId;
 
