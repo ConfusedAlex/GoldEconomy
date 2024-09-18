@@ -42,18 +42,18 @@ public class Converter {
     };
   }
 
-  public boolean isNotGold(Material material) {
-    return switch (base) {
-      case "ingots", "nuggets" -> switch (material) {
-        case GOLD_BLOCK, GOLD_INGOT, GOLD_NUGGET -> false;
-        default -> true;
+  public boolean isGold(Material material) {
+      return switch (base) {
+          case "ingots", "nuggets" -> switch (material) {
+              case GOLD_BLOCK, GOLD_INGOT, GOLD_NUGGET -> true;
+              default -> false;
+          };
+          case "raw" -> switch (material) {
+              case RAW_GOLD, RAW_GOLD_BLOCK -> true;
+              default -> false;
+          };
+          default -> false;
       };
-      case "raw" -> switch (material) {
-        case RAW_GOLD, RAW_GOLD_BLOCK -> false;
-        default -> true;
-      };
-      default -> false;
-    };
   }
 
   public int getInventoryValue(Player player) {
@@ -65,7 +65,7 @@ public class Converter {
         continue;
       Material material = item.getType();
 
-      if (isNotGold(material))
+      if (!isGold(material))
         continue;
 
       value += (getValue(material) * item.getAmount());
@@ -82,7 +82,7 @@ public class Converter {
         continue;
       Material material = item.getType();
 
-      if (isNotGold(material))
+      if (!isGold(material))
         continue;
 
       value += (getValue(material) * item.getAmount());
@@ -95,7 +95,7 @@ public class Converter {
     for (ItemStack item : player.getInventory()) {
       if (item == null)
         continue;
-      if (isNotGold(item.getType()))
+      if (!isGold(item.getType()))
         continue;
 
       item.setAmount(0);
@@ -200,7 +200,7 @@ public class Converter {
         continue;
       Material material = item.getType();
 
-      if (isNotGold(material))
+      if (!isGold(material))
         continue;
 
       value = value + (getValue(material) * item.getAmount());
