@@ -128,9 +128,8 @@ public class Commands {
 
   @CommandHook("set")
   public void set(CommandSender commandSender, OfflinePlayer target, int gold) {
-    if (commandSender instanceof Player) {
-      Player player = (Player) commandSender;
-      util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
+    if (commandSender instanceof Player player) {
+        util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
     }
 
     eco.bank.setBalance(target.getUniqueId().toString(), gold);
@@ -139,9 +138,8 @@ public class Commands {
 
   @CommandHook("add")
   public void add(CommandSender commandSender, OfflinePlayer target, int gold) {
-    if (commandSender instanceof Player) {
-      Player player = (Player) commandSender;
-      util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
+    if (commandSender instanceof Player player) {
+        util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
     }
 
     eco.depositPlayer(target, gold);
@@ -150,9 +148,8 @@ public class Commands {
 
   @CommandHook("remove")
   public void remove(CommandSender commandSender, OfflinePlayer target, int gold) {
-    if (commandSender instanceof Player) {
-      Player player = (Player) commandSender;
-      util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
+    if (commandSender instanceof Player player) {
+        util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
     }
 
     eco.withdrawPlayer(target, gold);
