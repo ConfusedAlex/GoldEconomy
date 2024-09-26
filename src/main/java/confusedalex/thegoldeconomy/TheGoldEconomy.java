@@ -1,6 +1,5 @@
 package confusedalex.thegoldeconomy;
 
-import de.leonhard.storage.Yaml;
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -11,23 +10,21 @@ import redempt.redlib.commandmanager.CommandParser;
 
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public final class TheGoldEconomy extends JavaPlugin {
   EconomyImplementer eco;
   private VaultHook vaultHook;
   Util util;
-  Yaml configFile;
 
   @Override
   public void onEnable() {
     // Config
-    configFile = new Yaml("config.yaml", getDataFolder().toString(), getResource("config.yaml"));
+    saveDefaultConfig();
 
     // Language
     ResourceBundle bundle;
-    String language = configFile.getString("language");
+    String language = getConfig().getString("language");
     HashMap<String, Locale> localeMap = new HashMap<>();
     localeMap.put("de_DE", Locale.GERMANY);
     localeMap.put("en_US", Locale.US);
@@ -44,7 +41,7 @@ public final class TheGoldEconomy extends JavaPlugin {
       getLogger().warning("Invalid language in config. Defaulting to English.");
     }
 
-    String base = configFile.getString("base");
+    String base = getConfig().getString("base");
     if (!base.equals("nuggets") && !base.equals("ingots") && !base.equals("raw")) {
       getLogger().severe(bundle.getString("error.invalidbase"));
       getServer().shutdown();
@@ -67,16 +64,16 @@ public final class TheGoldEconomy extends JavaPlugin {
         .setArgTypes(offlinePlayer)
         .parse()
         .register("TheGoldEconomy",
-            new Commands(bundle, eco, configFile, util));
+            new Commands(bundle, eco, util, getConfig()));
 
     // Event class registering
-    Bukkit.getPluginManager().registerEvents(new Events(this, eco.bank), this);
+    Bukkit.getPluginManager().registerEvents(new Events(eco.bank), this);
     // If removeGoldDrop is true, register Listener
-    if (configFile.getBoolean("removeGoldDrop"))
+    if (getConfig().getBoolean("removeGoldDrop"))
       Bukkit.getPluginManager().registerEvents(new RemoveGoldDrops(), this);
 
     // Update Checker
-    if (configFile.getBoolean("updateCheck")) {
+    if (getConfig().getBoolean("updateCheck")) {
       new UpdateChecker(this, 102242).getVersion(version -> {
         if (!this.getDescription().getVersion().equals(version)) {
           getLogger().info(bundle.getString("warning.update"));
@@ -91,23 +88,7 @@ public final class TheGoldEconomy extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    // Save player HashMap to File
-    for (Map.Entry<String, Integer> entry : eco.bank.getPlayerBank().entrySet()) {
-      String key = entry.getKey();
-      int value = entry.getValue();
-
-      eco.bank.getBalanceFile().getFileData().insert(key, value);
-    }
-    eco.bank.getBalanceFile().write();
-
-    // Save FakeAccount HashMap to File
-    for (Map.Entry<String, Integer> entry : eco.bank.getFakeAccounts().entrySet()) {
-      String key = entry.getKey();
-      int value = entry.getValue();
-
-      eco.bank.fakeAccountsFile.getFileData().insert(key, value);
-    }
-    eco.bank.fakeAccountsFile.write();
+    FileUtilsKt.writeToFiles(eco.bank.getPlayerAccounts(), eco.bank.getFakeAccounts());
 
     vaultHook.unhook();
 

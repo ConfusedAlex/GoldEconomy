@@ -22,8 +22,8 @@ public class EconomyImplementer implements Economy {
     this.plugin = plugin;
     this.bundle = bundle;
     this.util = util;
-    bank = new Bank(plugin, this);
     converter = new Converter(this, bundle);
+    bank = new Bank(converter);
   }
 
   @Override
@@ -65,10 +65,8 @@ public class EconomyImplementer implements Economy {
   public boolean hasAccount(String s) {
     if (Util.isOfflinePlayer(s).isPresent()) return true;
     if (bank.getFakeAccounts().containsKey(s)) return true;
-    else if (bank.fakeAccountsFile.contains(s)) return true;
 
-    bank.fakeAccountsFile.set(s, 0);
-    bank.getFakeAccounts().put(s, 0);
+    bank.setFakeAccountBalance(s, 0);
     return true;
   }
 
@@ -81,10 +79,8 @@ public class EconomyImplementer implements Economy {
   public boolean hasAccount(String s, String s1) {
     if (Util.isOfflinePlayer(s).isPresent()) return true;
     if (bank.getFakeAccounts().containsKey(s)) return true;
-    else if (bank.fakeAccountsFile.contains(s)) return true;
 
-    bank.fakeAccountsFile.set(s, 0);
-    bank.getFakeAccounts().put(s, 0);
+    bank.setFakeAccountBalance(s, 0);
     return true;
   }
 
@@ -96,62 +92,62 @@ public class EconomyImplementer implements Economy {
   @Override
   public double getBalance(String s) {
     try {
-      if (Bukkit.getPlayer(UUID.fromString(s)) != null) return bank.getTotalPlayerBalance(s);
+      UUID uuid = UUID.fromString(s);
+      if (Bukkit.getPlayer(uuid) != null) return bank.getTotalPlayerBalance(uuid);
     } catch (IllegalArgumentException e) {
       // String is not UUID
     }
     Optional<OfflinePlayer> playerOptional = Util.isOfflinePlayer(s);
-    if (playerOptional.isPresent())
-      return bank.getTotalPlayerBalance(playerOptional.get().getUniqueId().toString());
-    return bank.getFakeBalance(s);
+      return playerOptional.map(offlinePlayer -> bank.getTotalPlayerBalance(offlinePlayer.getUniqueId())).orElseGet(() -> bank.getFakeBalance(s));
   }
 
   @Override
   public double getBalance(OfflinePlayer offlinePlayer) {
-    if (offlinePlayer != null) return bank.getTotalPlayerBalance(offlinePlayer.getUniqueId().toString());
+    if (offlinePlayer != null) return bank.getTotalPlayerBalance(offlinePlayer.getUniqueId());
     return 0;
   }
 
   @Override
   public double getBalance(String s, String s1) {
     try {
-      if (Bukkit.getPlayer(UUID.fromString(s)) != null) return bank.getTotalPlayerBalance(s);
+      UUID uuid = UUID.fromString(s);
+      if (Bukkit.getPlayer(uuid) != null) return bank.getTotalPlayerBalance(uuid);
     } catch (IllegalArgumentException e) {
       // String is not UUID
     }
     if (Util.isOfflinePlayer(s).isPresent())
-      return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
+      return bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId());
     return bank.getFakeBalance(s);
   }
 
   @Override
   public double getBalance(OfflinePlayer offlinePlayer, String s) {
-    if (offlinePlayer != null) return bank.getTotalPlayerBalance(offlinePlayer.getUniqueId().toString());
+    if (offlinePlayer != null) return bank.getTotalPlayerBalance(offlinePlayer.getUniqueId());
     return 0;
   }
 
   @Override
   public boolean has(String s, double v) {
     if (Util.isOfflinePlayer(s).isPresent())
-      return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
+      return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId());
     else return v < bank.getFakeBalance(s);
   }
 
   @Override
   public boolean has(OfflinePlayer offlinePlayer, double v) {
-    return v < bank.getTotalPlayerBalance(offlinePlayer.getUniqueId().toString());
+    return v < bank.getTotalPlayerBalance(offlinePlayer.getUniqueId());
   }
 
   @Override
   public boolean has(String s, String s1, double v) {
     if (Util.isOfflinePlayer(s).isPresent())
-      return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId().toString());
+      return v < bank.getTotalPlayerBalance(Bukkit.getOfflinePlayer(s).getUniqueId());
     else return v < bank.getFakeBalance(s);
   }
 
   @Override
   public boolean has(OfflinePlayer offlinePlayer, String s, double v) {
-    return v < bank.getTotalPlayerBalance(offlinePlayer.getUniqueId().toString());
+    return v < bank.getTotalPlayerBalance(offlinePlayer.getUniqueId());
   }
 
   @Override
@@ -164,7 +160,7 @@ public class EconomyImplementer implements Economy {
     Optional<OfflinePlayer> playerOptional = Util.isOfflinePlayer(s);
     if (playerOptional.isPresent()) {
       OfflinePlayer offlinePlayer = playerOptional.get();
-      String uuid = offlinePlayer.getUniqueId().toString();
+      UUID uuid = offlinePlayer.getUniqueId();
 
       // if player is online
       if (offlinePlayer.isOnline()) {
@@ -183,12 +179,12 @@ public class EconomyImplementer implements Economy {
           return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "Not enough Money!");
         // If bank balances is enough to cover amount
         if (oldBankBalance - amount > 0) {
-          bank.setBalance(uuid, (int) (oldBankBalance - amount));
+          bank.setAccountBalance(uuid, (int) (oldBankBalance - amount));
           return new EconomyResponse(amount, (oldBankBalance - amount), EconomyResponse.ResponseType.SUCCESS, "");
         } else {
           // Set balance to 0 and cover rest of the costs with Inventory Funds
           int diff = (int) (amount - oldBankBalance);
-          bank.setBalance(uuid, 0);
+          bank.setAccountBalance(uuid, 0);
           converter.remove(player, diff);
 
           return new EconomyResponse(amount, oldInventoryBalance - amount, EconomyResponse.ResponseType.SUCCESS, "");
@@ -197,20 +193,20 @@ public class EconomyImplementer implements Economy {
         // When player is offline
         oldBalance = bank.getTotalPlayerBalance(uuid);
         int newBalance = (int) (oldBalance - amount);
-        bank.setBalance(uuid, newBalance);
+        bank.setAccountBalance(uuid, newBalance);
         return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
       }
     } else {
       oldBalance = bank.getFakeBalance(s);
       int newBalance = (int) (oldBalance - amount);
-      bank.setBalance(s, newBalance);
+      bank.setFakeAccountBalance(s, newBalance);
       return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
     }
   }
 
   @Override
   public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double amount) {
-    String uuid = offlinePlayer.getUniqueId().toString();
+    UUID uuid = offlinePlayer.getUniqueId();
     Player player;
     int oldBalance = 0;
 
@@ -233,12 +229,12 @@ public class EconomyImplementer implements Economy {
         return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
       // If bank balances is enough to cover amount
       if (oldBankBalance - amount > 0) {
-        bank.setBalance(uuid, (int) (oldBankBalance - amount));
+        bank.setAccountBalance(uuid, (int) (oldBankBalance - amount));
         return new EconomyResponse(amount, (oldBankBalance - amount), EconomyResponse.ResponseType.SUCCESS, "");
       } else {
         // Set balance to 0 and cover rest of the costs with Inventory Funds
         int diff = (int) (amount - oldBankBalance);
-        bank.setBalance(uuid, 0);
+        bank.setAccountBalance(uuid, 0);
         converter.remove(player, diff);
         return new EconomyResponse(amount, oldInventoryBalance - amount, EconomyResponse.ResponseType.SUCCESS, "");
       }
@@ -246,7 +242,7 @@ public class EconomyImplementer implements Economy {
       // if offline or fakeAccount
       oldBalance = bank.getTotalPlayerBalance(uuid);
       int newBalance = (int) (oldBalance - amount);
-      bank.setBalance(uuid, newBalance);
+      bank.setAccountBalance(uuid, newBalance);
 
       return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
     }
@@ -262,7 +258,7 @@ public class EconomyImplementer implements Economy {
     Optional<OfflinePlayer> playerOptional = Util.isOfflinePlayer(s);
     if (playerOptional.isPresent()) {
       OfflinePlayer offlinePlayer = playerOptional.get();
-      String uuid = offlinePlayer.getUniqueId().toString();
+      UUID uuid = offlinePlayer.getUniqueId();
 
       // if player is online
       if (offlinePlayer.isOnline()) {
@@ -281,12 +277,12 @@ public class EconomyImplementer implements Economy {
           return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "Not enough Money!");
         // If bank balances is enough to cover amount
         if (oldBankBalance - amount > 0) {
-          bank.setBalance(uuid, (int) (oldBankBalance - amount));
+          bank.setAccountBalance(uuid, (int) (oldBankBalance - amount));
           return new EconomyResponse(amount, (oldBankBalance - amount), EconomyResponse.ResponseType.SUCCESS, "");
         } else {
           // Set balance to 0 and cover rest of the costs with Inventory Funds
           int diff = (int) (amount - oldBankBalance);
-          bank.setBalance(uuid, 0);
+          bank.setAccountBalance(uuid, 0);
           converter.remove(player, diff);
 
           return new EconomyResponse(amount, oldInventoryBalance - amount, EconomyResponse.ResponseType.SUCCESS, "");
@@ -295,20 +291,20 @@ public class EconomyImplementer implements Economy {
         // When player is offline
         oldBalance = bank.getTotalPlayerBalance(uuid);
         int newBalance = (int) (oldBalance - amount);
-        bank.setBalance(uuid, newBalance);
+        bank.setAccountBalance(uuid, newBalance);
         return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
       }
     } else {
       oldBalance = bank.getFakeBalance(s);
       int newBalance = (int) (oldBalance - amount);
-      bank.setBalance(s, newBalance);
+      bank.setFakeAccountBalance(s, newBalance);
       return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
     }
   }
 
   @Override
   public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String s, double amount) {
-    String uuid = offlinePlayer.getUniqueId().toString();
+    UUID uuid = offlinePlayer.getUniqueId();
     Player player;
     int oldBalance = 0;
 
@@ -331,12 +327,12 @@ public class EconomyImplementer implements Economy {
         return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
       // If bank balances is enough to cover amount
       if (oldBankBalance - amount > 0) {
-        bank.setBalance(uuid, (int) (oldBankBalance - amount));
+        bank.setAccountBalance(uuid, (int) (oldBankBalance - amount));
         return new EconomyResponse(amount, (oldBankBalance - amount), EconomyResponse.ResponseType.SUCCESS, "");
       } else {
         // Set balance to 0 and cover rest of the costs with Inventory Funds
         int diff = (int) (amount - oldBankBalance);
-        bank.setBalance(uuid, 0);
+        bank.setAccountBalance(uuid, 0);
         converter.remove(player, diff);
 
         return new EconomyResponse(amount, oldInventoryBalance - amount, EconomyResponse.ResponseType.SUCCESS, "");
@@ -345,7 +341,7 @@ public class EconomyImplementer implements Economy {
       // if offline
       oldBalance = bank.getTotalPlayerBalance(uuid);
       int newBalance = (int) (oldBalance - amount);
-      bank.setBalance(uuid, newBalance);
+      bank.setAccountBalance(uuid, newBalance);
 
       return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
     }
@@ -361,31 +357,31 @@ public class EconomyImplementer implements Economy {
     Optional<OfflinePlayer> playerOptional = Util.isOfflinePlayer(s);
     if (playerOptional.isPresent()) {
       OfflinePlayer player = playerOptional.get();
-      String uuid = player.getUniqueId().toString();
+      UUID uuid = player.getUniqueId();
 
       // Getting balance and calculating new Balance
       oldBalance = bank.getAccountBalance(uuid);
       int newBalance = (int) (oldBalance + amount);
-      bank.setBalance(uuid, newBalance);
+      bank.setAccountBalance(uuid, newBalance);
       return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
     } else {
       oldBalance = bank.getFakeBalance(s);
       int newBalance = (int) (oldBalance + amount);
-      bank.setBalance(s, newBalance);
+      bank.setFakeAccountBalance(s, newBalance);
       return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
     }
   }
 
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double amount) {
-    String uuid = offlinePlayer.getUniqueId().toString();
+    UUID uuid = offlinePlayer.getUniqueId();
     int oldBalance = bank.getAccountBalance(uuid);
     int newBalance = (int) (amount + oldBalance);
 
     // If amount is negative -> return
     if (amount < 0) return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
-    bank.setBalance(uuid, newBalance);
+    bank.setAccountBalance(uuid, newBalance);
     return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
   }
 
@@ -399,31 +395,31 @@ public class EconomyImplementer implements Economy {
     Optional<OfflinePlayer> playerOptional = Util.isOfflinePlayer(s);
     if (playerOptional.isPresent()) {
       OfflinePlayer player = playerOptional.get();
-      String uuid = player.getUniqueId().toString();
+      UUID uuid = player.getUniqueId();
 
       // Getting balance and calculating new Balance
       oldBalance = bank.getAccountBalance(uuid);
       int newBalance = (int) (oldBalance + amount);
-      bank.setBalance(uuid, newBalance);
+      bank.setAccountBalance(uuid, newBalance);
       return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
     } else {
       oldBalance = bank.getFakeBalance(s);
       int newBalance = (int) (oldBalance + amount);
-      bank.setBalance(s, newBalance);
+      bank.setFakeAccountBalance(s, newBalance);
       return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
     }
   }
 
   @Override
   public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, String s, double amount) {
-    String uuid = offlinePlayer.getUniqueId().toString();
+    UUID uuid = offlinePlayer.getUniqueId();
     int oldBalance = bank.getAccountBalance(uuid);
     int newBalance = (int) (amount + oldBalance);
 
     // If amount is negative -> return
     if (amount < 0) return new EconomyResponse(amount, oldBalance, EconomyResponse.ResponseType.FAILURE, "error");
 
-    bank.setBalance(uuid, newBalance);
+    bank.setAccountBalance(uuid, newBalance);
     return new EconomyResponse(amount, newBalance, EconomyResponse.ResponseType.SUCCESS, "");
   }
 

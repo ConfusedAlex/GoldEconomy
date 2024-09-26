@@ -38,11 +38,11 @@ public class Placeholders extends PlaceholderExpansion {
     }
 
     if (params.equalsIgnoreCase("bankBalance")) {
-      return Integer.toString(plugin.eco.bank.getAccountBalance(player.getUniqueId().toString()));
+      return Integer.toString(plugin.eco.bank.getAccountBalance(player.getUniqueId()));
     }
 
     if (params.equalsIgnoreCase("totalBalance")) {
-      return Integer.toString(plugin.eco.bank.getTotalPlayerBalance(player.getUniqueId().toString()));
+      return Integer.toString(plugin.eco.bank.getTotalPlayerBalance(player.getUniqueId()));
     }
 
     return null;

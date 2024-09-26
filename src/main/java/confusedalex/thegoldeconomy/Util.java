@@ -18,14 +18,16 @@ public class Util {
     for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
       String name = p.getName();
       if (name != null) {
-        if (name.equals(playerName)) return Optional.of(p);
+        if (name.equals(playerName)) {
+          return Optional.of(p);
+        }
       }
     }
     return Optional.empty();
   }
 
   public void sendMessageToPlayer(String message, Player player) {
-    String prefix = plugin.configFile.getString("prefix");
+    String prefix = plugin.getConfig().getString("prefix");
     if (player != null) {
       player.sendMessage(String.format(ChatColor.GOLD + "[%s] " + ChatColor.WHITE + ChatColor.translateAlternateColorCodes('&', message), prefix));
     }

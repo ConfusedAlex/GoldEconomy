@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class Converter {
   EconomyImplementer eco;
@@ -167,26 +168,26 @@ public class Converter {
   }
 
   public void withdrawAll(Player player) {
-    String uuid = player.getUniqueId().toString();
+    UUID uuid = player.getUniqueId();
 
     // searches in the Hashmap for the balance, so that a player can't withdraw gold
     // from his Inventory
-    int value = eco.bank.getAccountBalance(player.getUniqueId().toString());
-    eco.bank.setBalance(uuid, (0));
+    int value = eco.bank.getAccountBalance(player.getUniqueId());
+    eco.bank.setAccountBalance(uuid, (0));
 
     give(player, value);
   }
 
   public void withdraw(Player player, int nuggets) {
-    String uuid = player.getUniqueId().toString();
-    int oldbalance = eco.bank.getAccountBalance(player.getUniqueId().toString());
+    UUID uuid = player.getUniqueId();
+    int oldBalance = eco.bank.getAccountBalance(player.getUniqueId());
 
     // Checks balance in HashMap
-    if (nuggets > eco.bank.getPlayerBank().get(player.getUniqueId().toString())) {
+    if (nuggets > eco.bank.getAccountBalance(uuid)) {
       eco.util.sendMessageToPlayer(bundle.getString("error.notenoughmoneywithdraw"), player);
       return;
     }
-    eco.bank.setBalance(uuid, (oldbalance - nuggets));
+    eco.bank.setAccountBalance(uuid, (oldBalance - nuggets));
 
     give(player, nuggets);
   }
