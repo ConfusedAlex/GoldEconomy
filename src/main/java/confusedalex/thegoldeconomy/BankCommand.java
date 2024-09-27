@@ -1,55 +1,46 @@
 package confusedalex.thegoldeconomy;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.TownBlockType;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Subcommand;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import redempt.redlib.commandmanager.CommandHook;
 
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-public class Commands {
+@CommandAlias("bank")
+public class BankCommand extends BaseCommand {
   ResourceBundle bundle;
   EconomyImplementer eco;
   Util util;
   FileConfiguration config;
 
-  public Commands(ResourceBundle bundle, EconomyImplementer eco, Util util, FileConfiguration config) {
-    this.bundle = bundle;
-    this.eco = eco;
-    this.util = util;
-    this.config = config;
+  public BankCommand(TheGoldEconomy plugin) {
+    this.bundle = plugin.eco.bundle;
+    this.eco = plugin.eco;
+    this.util = plugin.util;
+    this.config = plugin.getConfig();
   }
 
-  public boolean isBankingRestrictedToPlot(Player player) {
-    if (config.getBoolean("restrictToBankPlot")) {
-      if (TownyAPI.getInstance().getTownBlock(player.getLocation()) == null || !Objects.requireNonNull(TownyAPI.getInstance().getTownBlock(player.getLocation())).getType().equals(TownBlockType.BANK)) {
-        util.sendMessageToPlayer(bundle.getString("error.bankplot"), player);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @CommandHook("balance")
+  @Subcommand("balance")
   public void balance(CommandSender commandSender) {
     Player player = (Player) commandSender;
     UUID uuid = player.getUniqueId();
     util.sendMessageToPlayer(String.format(bundle.getString("info.balance"), (int) eco.getBalance(uuid.toString()), eco.bank.getAccountBalance(uuid), eco.converter.getInventoryValue(player)), player);
   }
 
-  @CommandHook("pay")
+  @Subcommand("pay")
   public void pay(CommandSender commandSender, OfflinePlayer target, int amount) {
     Player sender = (Player) commandSender;
     UUID senderuuid = sender.getUniqueId();
     UUID targetuuid = target.getUniqueId();
 
-    if (isBankingRestrictedToPlot(sender)) return;
+    if (util.isBankingRestrictedToPlot(sender)) return;
     if (amount == 0) {
       util.sendMessageToPlayer(bundle.getString("error.zero"), sender);
       return;
@@ -79,11 +70,11 @@ public class Commands {
     }
   }
 
-  @CommandHook("deposit")
+  @Subcommand("deposit")
   public void deposit(CommandSender commandSender, String nuggets) {
     Player player = (Player) commandSender;
 
-    if (isBankingRestrictedToPlot(player)) return;
+    if (util.isBankingRestrictedToPlot(player)) return;
     if (nuggets == null) {
       util.sendMessageToPlayer(bundle.getString("help.deposit"), player);
       return;
@@ -103,11 +94,11 @@ public class Commands {
     }
   }
 
-  @CommandHook("withdraw")
+  @Subcommand("withdraw")
   public void withdraw(CommandSender commandSender, String nuggets) {
     Player player = (Player) commandSender;
 
-    if (isBankingRestrictedToPlot(player)) {
+    if (util.isBankingRestrictedToPlot(player)) {
       return;
     }
     if (nuggets == null) {
@@ -127,7 +118,7 @@ public class Commands {
     }
   }
 
-  @CommandHook("set")
+  @Subcommand("set")
   public void set(CommandSender commandSender, OfflinePlayer target, int gold) {
     if (commandSender instanceof Player player) {
         util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
@@ -137,7 +128,7 @@ public class Commands {
     util.sendMessageToPlayer(String.format(bundle.getString("info.target.moneyset"), gold), Bukkit.getPlayer(target.getUniqueId()));
   }
 
-  @CommandHook("add")
+  @Subcommand("add")
   public void add(CommandSender commandSender, OfflinePlayer target, int gold) {
     if (commandSender instanceof Player player) {
         util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
@@ -147,7 +138,7 @@ public class Commands {
     util.sendMessageToPlayer(String.format(bundle.getString("info.target.addmoney"), gold), Bukkit.getPlayer(target.getUniqueId()));
   }
 
-  @CommandHook("remove")
+  @Subcommand("remove")
   public void remove(CommandSender commandSender, OfflinePlayer target, int gold) {
     if (commandSender instanceof Player player) {
         util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);

@@ -1,12 +1,9 @@
 package confusedalex.thegoldeconomy;
 
+import co.aikar.commands.PaperCommandManager;
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import redempt.redlib.commandmanager.ArgType;
-import redempt.redlib.commandmanager.CommandParser;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -16,6 +13,7 @@ public final class TheGoldEconomy extends JavaPlugin {
   EconomyImplementer eco;
   private VaultHook vaultHook;
   Util util;
+  ResourceBundle bundle;
 
   @Override
   public void onEnable() {
@@ -23,7 +21,6 @@ public final class TheGoldEconomy extends JavaPlugin {
     saveDefaultConfig();
 
     // Language
-    ResourceBundle bundle;
     String language = getConfig().getString("language");
     HashMap<String, Locale> localeMap = new HashMap<>();
     localeMap.put("de_DE", Locale.GERMANY);
@@ -57,14 +54,9 @@ public final class TheGoldEconomy extends JavaPlugin {
     vaultHook = new VaultHook(this, eco);
     vaultHook.hook();
 
-    // Commands from RedLib
-    ArgType<OfflinePlayer> offlinePlayer = new ArgType<>("offlinePlayer", Bukkit::getOfflinePlayer)
-        .tabStream(c -> Bukkit.getOnlinePlayers().stream().map(Player::getName));
-    new CommandParser(this.getResource("commands.rdcml"))
-        .setArgTypes(offlinePlayer)
-        .parse()
-        .register("TheGoldEconomy",
-            new Commands(bundle, eco, util, getConfig()));
+    // Registering Command using ACF
+    PaperCommandManager manager = new PaperCommandManager(this);
+    manager.registerCommand(new BankCommand(this));
 
     // Event class registering
     Bukkit.getPluginManager().registerEvents(new Events(eco.bank), this);
