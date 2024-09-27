@@ -72,6 +72,7 @@
                     <compilerPlugins>
                         <plugin>kotlinx-serialization</plugin>
                     </compilerPlugins>
+                    <javaParameters>true</javaParameters>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -112,6 +113,9 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
@@ -137,16 +141,16 @@
             <url>https://repo.glaremasters.me/repository/towny/</url>
         </repository>
         <repository>
-            <id>redempt.dev</id>
-            <url>https://redempt.dev</url>
-        </repository>
-        <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <repository>
+            <id>aikar</id>
+            <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
     </repositories>
 
@@ -168,11 +172,6 @@
             <artifactId>towny</artifactId>
             <version>0.98.1.0</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.Redempt</groupId>
-            <artifactId>RedLib</artifactId>
-            <version>6.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -205,6 +204,11 @@
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-serialization-json</artifactId>
             <version>${serialization.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>co.aikar</groupId>
+            <artifactId>acf-paper</artifactId>
+            <version>0.5.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
