@@ -129,8 +129,11 @@ public class Converter {
     }
 
     if (value / blockValue > 0) {
+      // Set max. stack size to 64, otherwise the stacks will go up to 99
+      player.getInventory().setMaxStackSize(64);
+
       HashMap<Integer, ItemStack> blocks = player.getInventory()
-          .addItem(new ItemStack(block, value / blockValue));
+              .addItem(new ItemStack(block, value / blockValue));
       for (ItemStack item : blocks.values()) {
         if (item != null && item.getType() == block && item.getAmount() > 0) {
           player.getWorld().dropItem(player.getLocation(), item);
@@ -143,7 +146,7 @@ public class Converter {
 
     if (value / ingotValue > 0) {
       HashMap<Integer, ItemStack> ingots = player.getInventory()
-          .addItem(new ItemStack(ingot, value / ingotValue));
+              .addItem(new ItemStack(ingot, value / ingotValue));
       for (ItemStack item : ingots.values()) {
         if (item != null && item.getType() == ingot && item.getAmount() > 0) {
           player.getWorld().dropItem(player.getLocation(), item);
