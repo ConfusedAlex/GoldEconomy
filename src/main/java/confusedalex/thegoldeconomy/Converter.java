@@ -44,17 +44,17 @@ public class Converter {
   }
 
   public boolean isGold(Material material) {
-      return switch (base) {
-          case "ingots", "nuggets" -> switch (material) {
-              case GOLD_BLOCK, GOLD_INGOT, GOLD_NUGGET -> true;
-              default -> false;
-          };
-          case "raw" -> switch (material) {
-              case RAW_GOLD, RAW_GOLD_BLOCK -> true;
-              default -> false;
-          };
-          default -> false;
+    return switch (base) {
+      case "ingots", "nuggets" -> switch (material) {
+        case GOLD_BLOCK, GOLD_INGOT, GOLD_NUGGET -> true;
+        default -> false;
       };
+      case "raw" -> switch (material) {
+        case RAW_GOLD, RAW_GOLD_BLOCK -> true;
+        default -> false;
+      };
+      default -> false;
+    };
   }
 
   public int getInventoryValue(Player player) {
