@@ -1,12 +1,13 @@
 # Infos
 name: TheGoldEconomy
-version: '1.6.6'
+version: "1.6.7"
 description: A simple gold based Economy plugin that just works.
 author: ConfusedAlex
 api-version: 1.18
 
 # Data
 main: confusedalex.thegoldeconomy.TheGoldEconomy
-softdepend: [ PlaceholderAPI ]
-loadbefore: [ Towny ]
-depend: [ Vault ]
+softdepend: [PlaceholderAPI]
+loadbefore: [Towny]
+depend: [Vault]
+
