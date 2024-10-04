@@ -42,3 +42,15 @@ bank {
         permission thegoldeconomy.remove
     }
 }
+
+balance {
+    help show your balance
+    user player
+    hook balance
+}
+
+bal {
+    help show your balance
+    user player
+    hook balance
+}
