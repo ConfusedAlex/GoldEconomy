@@ -1,5 +1,6 @@
 package confusedalex.thegoldeconomy;
 
+import co.aikar.commands.Locales;
 import co.aikar.commands.PaperCommandManager;
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.Bukkit;
@@ -20,19 +21,30 @@ public final class TheGoldEconomy extends JavaPlugin {
     // Config
     saveDefaultConfig();
 
+    // Registering Command using ACF
+    PaperCommandManager manager = new PaperCommandManager(this);
+    manager.enableUnstableAPI("help");
+
     // Language
     String language = getConfig().getString("language");
     HashMap<String, Locale> localeMap = new HashMap<>();
-    localeMap.put("de_DE", Locale.GERMANY);
-    localeMap.put("en_US", Locale.US);
-    localeMap.put("zh_CN", Locale.SIMPLIFIED_CHINESE);
-    localeMap.put("es_ES", LocaleUtils.toLocale("es_ES"));
-    localeMap.put("tr_TR", LocaleUtils.toLocale("tr_TR"));
-    localeMap.put("pt_BR", LocaleUtils.toLocale("pt_BR"));
-    localeMap.put("nb_NO", LocaleUtils.toLocale("nb_NO"));
+    localeMap.put("de_DE", Locales.GERMAN);
+    localeMap.put("en_US", Locales.ENGLISH);
+    localeMap.put("zh_CN", Locales.SIMPLIFIED_CHINESE);
+    localeMap.put("es_ES", Locales.SPANISH);
+    localeMap.put("tr_TR", Locales.TURKISH);
+    localeMap.put("pt_BR", Locales.PORTUGUESE);
+    localeMap.put("nb_NO", Locales.NORWEGIAN_BOKMAAL);
+    localeMap.put("uk", Locales.UKRANIAN);
 
     if (localeMap.containsKey(language)) {
-      bundle = ResourceBundle.getBundle("messages", localeMap.get(language));
+      Locale locale = localeMap.get(language);
+      bundle = ResourceBundle.getBundle("messages", locale);
+      manager.addSupportedLanguage(locale);
+      manager.getLocales().addMessageBundle("messages", locale);
+      manager.getLocales().addMessageBundles("messages");
+      manager.getLocales();
+      manager.getLocales().setDefaultLocale(locale);
     } else {
       bundle = ResourceBundle.getBundle("messages", Locale.US);
       getLogger().warning("Invalid language in config. Defaulting to English.");
@@ -54,8 +66,6 @@ public final class TheGoldEconomy extends JavaPlugin {
     vaultHook = new VaultHook(this, eco);
     vaultHook.hook();
 
-    // Registering Command using ACF
-    PaperCommandManager manager = new PaperCommandManager(this);
     manager.registerCommand(new BankCommand(this));
 
     // Event class registering
