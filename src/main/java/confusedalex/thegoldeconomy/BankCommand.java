@@ -34,6 +34,7 @@ public class BankCommand extends BaseCommand {
 
   @Subcommand("balance")
   @CommandAlias("balance")
+  @Description("{@@command.info.balance}")
   public void balance(CommandSender commandSender) {
     Player player = (Player) commandSender;
     UUID uuid = player.getUniqueId();
