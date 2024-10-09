@@ -1,8 +1,8 @@
 package confusedalex.thegoldeconomy;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.CommandHelp;
+import co.aikar.commands.annotation.*;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -25,6 +25,11 @@ public class BankCommand extends BaseCommand {
     this.eco = plugin.eco;
     this.util = plugin.util;
     this.config = plugin.getConfig();
+  }
+
+  @HelpCommand
+  public void help(CommandHelp help) {
+    help.showHelp();
   }
 
   @Subcommand("balance")
