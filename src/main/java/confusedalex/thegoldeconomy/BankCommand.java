@@ -42,6 +42,7 @@ public class BankCommand extends BaseCommand {
   }
 
   @Subcommand("pay")
+  @Description("{@@command.info.pay}")
   public void pay(CommandSender commandSender, OfflinePlayer target, int amount) {
     Player sender = (Player) commandSender;
     UUID senderuuid = sender.getUniqueId();
@@ -78,6 +79,7 @@ public class BankCommand extends BaseCommand {
   }
 
   @Subcommand("deposit")
+  @Description("{@@command.info.deposit}")
   public void deposit(CommandSender commandSender, @Optional String nuggets) {
     Player player = (Player) commandSender;
 
@@ -108,6 +110,7 @@ public class BankCommand extends BaseCommand {
   }
 
   @Subcommand("withdraw")
+  @Description("{@@command.info.withdraw}")
   public void withdraw(CommandSender commandSender, @Optional String nuggets) {
     Player player = (Player) commandSender;
 
@@ -130,6 +133,8 @@ public class BankCommand extends BaseCommand {
   }
 
   @Subcommand("set")
+  @CommandPermission("thegoldeconomy.set")
+  @Description("{@@command.info.set}")
   public void set(CommandSender commandSender, OfflinePlayer target, int gold) {
     if (commandSender instanceof Player player) {
         util.sendMessageToPlayer(String.format(bundle.getString("info.sender.moneyset"), target.getName(), gold), player);
@@ -140,6 +145,8 @@ public class BankCommand extends BaseCommand {
   }
 
   @Subcommand("add")
+  @CommandPermission("thegoldeconomy.add")
+  @Description("{@@command.info.add}")
   public void add(CommandSender commandSender, OfflinePlayer target, int gold) {
     if (commandSender instanceof Player player) {
         util.sendMessageToPlayer(String.format(bundle.getString("info.sender.addmoney"), gold, target.getName()), player);
@@ -150,6 +157,8 @@ public class BankCommand extends BaseCommand {
   }
 
   @Subcommand("remove")
+  @CommandPermission("thegoldeconomy.remove")
+  @Description("{@@command.info.remove}")
   public void remove(CommandSender commandSender, OfflinePlayer target, int gold) {
     if (commandSender instanceof Player player) {
         util.sendMessageToPlayer(String.format(bundle.getString("info.sender.remove"), gold, target.getName()), player);
