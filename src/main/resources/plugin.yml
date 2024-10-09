@@ -11,3 +11,18 @@ softdepend: [PlaceholderAPI]
 loadbefore: [Towny]
 depend: [Vault]
 
+permissions:
+  thegoldeconomy.balance:
+    default: true
+  thegoldeconomy.deposit:
+    default: true
+  thegoldeconomy.withdraw:
+    default: true
+  thegoldeconomy.pay:
+    default: true
+  thegoldeconomy.set:
+    default: false
+  thegoldeconomy.add:
+    default: false
+  thegoldeconomy.remove:
+    default: false

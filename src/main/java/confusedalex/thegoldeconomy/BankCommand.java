@@ -35,6 +35,7 @@ public class BankCommand extends BaseCommand {
   @Subcommand("balance")
   @CommandAlias("balance")
   @Description("{@@command.info.balance}")
+  @CommandPermission("thegoldeconomy.balance")
   public void balance(CommandSender commandSender) {
     Player player = (Player) commandSender;
     UUID uuid = player.getUniqueId();
@@ -43,6 +44,7 @@ public class BankCommand extends BaseCommand {
 
   @Subcommand("pay")
   @Description("{@@command.info.pay}")
+  @CommandPermission("thegoldeconomy.pay")
   public void pay(CommandSender commandSender, OfflinePlayer target, int amount) {
     Player sender = (Player) commandSender;
     UUID senderuuid = sender.getUniqueId();
@@ -80,6 +82,7 @@ public class BankCommand extends BaseCommand {
 
   @Subcommand("deposit")
   @Description("{@@command.info.deposit}")
+  @CommandPermission("thegoldeconomy.deposit")
   public void deposit(CommandSender commandSender, @Optional String nuggets) {
     Player player = (Player) commandSender;
 
@@ -111,6 +114,7 @@ public class BankCommand extends BaseCommand {
 
   @Subcommand("withdraw")
   @Description("{@@command.info.withdraw}")
+  @CommandPermission("thegoldeconomy.withdraw")
   public void withdraw(CommandSender commandSender, @Optional String nuggets) {
     Player player = (Player) commandSender;
 
