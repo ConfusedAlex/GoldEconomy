@@ -124,23 +124,34 @@ public class BankCommand extends BaseCommand {
   public void withdraw(CommandSender commandSender, @Optional String nuggets) {
     Player player = (Player) commandSender;
 
-    if (util.isBankingRestrictedToPlot(player)) {
+    if (util.isBankingRestrictedToPlot(player)) return;
+    if (nuggets == null || nuggets.equals("all")) {
+      int accountBalance = eco.bank.getAccountBalance(player.getUniqueId());
+      util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), accountBalance), player);
+      eco.converter.withdrawAll(player);
       return;
     }
-    if (nuggets == null || nuggets.equals("all")) {
-      util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), eco.bank.getAccountBalance(player.getUniqueId())), player);
-      eco.converter.withdrawAll((Player) commandSender);
-    } else if (Integer.parseInt(nuggets) == 0) {
+
+    int amount = 0;
+    try {
+      amount = Integer.parseInt(nuggets);
+    } catch (NumberFormatException e) {
+      getCommandHelp().showHelp();
+      return;
+    }
+
+    if (amount == 0) {
       util.sendMessageToPlayer(bundle.getString("error.zero"), player);
-    } else if (Integer.parseInt(nuggets) < 0) {
+    } else if (amount < 0) {
       util.sendMessageToPlayer(bundle.getString("error.negative"), player);
-    } else if (Integer.parseInt(nuggets) > eco.bank.getAccountBalance(player.getUniqueId())) {
+    } else if (amount > eco.bank.getAccountBalance(player.getUniqueId())) {
       util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
     } else {
-      util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), Integer.parseInt(nuggets)), player);
-      eco.converter.withdraw((Player) commandSender, Integer.parseInt(nuggets));
+      util.sendMessageToPlayer(String.format(bundle.getString("info.withdraw"), amount), player);
+      eco.converter.withdraw(player, amount);
     }
   }
+
 
   @Subcommand("set")
   @CommandPermission("thegoldeconomy.set")
