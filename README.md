@@ -82,6 +82,9 @@ updateCheck: true
 # Spanish: es_ES
 # Simplified Chinese: zh_CN
 # Turkish: tr_TR
+# Brazilian Portuguese: pt_BR
+# Norwegian: nb_NO
+# Ukrainian: uk
 language: "en_US"
 # Do you want to restrict bank commands to bank plots (requires Towny)
 restrictToBankPlot: false
@@ -90,9 +93,9 @@ prefix: "TheGoldEconomy"
 # This value sets the base domination of the economy
 # 'nuggets' = 1 nugget is 1 currency, 1 ingot is 9, 1 block is 81
 # 'ingots'  = 1 ingots is 1 currency, 1 block is 9
+# 'raw' = 1 raw gold is 1 currency, 1 block is 9
 base: "nuggets"
 ```
-
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FConfusedAlex%2FGoldEconomy.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FConfusedAlex%2FGoldEconomy?ref=badge_large)
