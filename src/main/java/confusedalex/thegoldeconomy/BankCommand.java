@@ -98,9 +98,10 @@ public class BankCommand extends BaseCommand {
       amount = Integer.parseInt(nuggets);
     } catch (NumberFormatException e) {
       getCommandHelp().showHelp();
+      return;
     }
 
-      if (amount == 0) {
+    if (amount == 0) {
       util.sendMessageToPlayer(bundle.getString("error.zero"), player);
     } else if (amount < 0) {
       util.sendMessageToPlayer(bundle.getString("error.negative"), player);
