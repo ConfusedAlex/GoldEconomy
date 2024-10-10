@@ -20,9 +20,3 @@ permissions:
     default: true
   thegoldeconomy.pay:
     default: true
-  thegoldeconomy.set:
-    default: false
-  thegoldeconomy.add:
-    default: false
-  thegoldeconomy.remove:
-    default: false
