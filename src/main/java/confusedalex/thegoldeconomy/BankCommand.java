@@ -85,10 +85,15 @@ public class BankCommand extends BaseCommand {
   @CommandPermission("thegoldeconomy.deposit")
   public void deposit(CommandSender commandSender, @Optional String nuggets) {
     Player player = (Player) commandSender;
+    int inventoryValue = eco.converter.getInventoryValue((Player) commandSender);
 
     if (util.isBankingRestrictedToPlot(player)) return;
     if (nuggets == null || nuggets.equals("all")) {
-      util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), eco.converter.getInventoryValue((Player) commandSender)), player);
+      if (inventoryValue <= 0) {
+        util.sendMessageToPlayer(bundle.getString("error.zero"), player);
+        return;
+      }
+      util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), inventoryValue), player);
       eco.converter.depositAll((Player) commandSender);
       return;
     }
@@ -105,7 +110,7 @@ public class BankCommand extends BaseCommand {
       util.sendMessageToPlayer(bundle.getString("error.zero"), player);
     } else if (amount < 0) {
       util.sendMessageToPlayer(bundle.getString("error.negative"), player);
-    } else if (amount > eco.converter.getInventoryValue(player)) {
+    } else if (amount > inventoryValue) {
       util.sendMessageToPlayer(bundle.getString("error.notenough"), player);
     } else {
       util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), amount), player);
