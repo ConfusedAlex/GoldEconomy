@@ -28,20 +28,33 @@ class BankCommand(plugin: TheGoldEconomy) : BaseCommand() {
     @CommandAlias("balance")
     @Description("{@@command.info.balance}")
     @CommandPermission("thegoldeconomy.balance")
-    fun balance(commandSender: CommandSender) {
-        val playerOptional = util.isPlayer(commandSender)
-        if (playerOptional.isEmpty) return
-        val player = playerOptional.get()
-        val uuid = player.uniqueId
+    fun balance(commandSender: CommandSender, @Optional player: OfflinePlayer?) {
+        val senderOptional = util.isPlayer(commandSender)
+        if (senderOptional.isEmpty) return
 
-        util.sendMessageToPlayer(
-            String.format(
-                bundle.getString("info.balance"),
-                eco.getBalance(uuid.toString()).toInt(),
-                eco.bank.getAccountBalance(uuid),
-                eco.converter.getInventoryValue(player)
-            ), player
-        )
+        val sender = senderOptional.get()
+        val uuid = sender.uniqueId
+
+        if (player == null) {
+            util.sendMessageToPlayer(
+                String.format(
+                    bundle.getString("info.balance"),
+                    eco.getBalance(uuid.toString()).toInt(),
+                    eco.bank.getAccountBalance(uuid),
+                    eco.converter.getInventoryValue(sender)
+                ), sender
+            )
+        } else if (sender.hasPermission("thegoldeconomy.balance.others")){
+            util.sendMessageToPlayer(
+                String.format(
+                    bundle.getString("info.balance.other"),
+                    player.name,
+                    eco.getBalance(player).toInt()
+                ), sender
+            )
+        } else {
+            util.sendMessageToPlayer(bundle.getString("error.nopermission"), sender)
+        }
     }
 
     @Subcommand("pay")
