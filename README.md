@@ -8,14 +8,13 @@
 
 ## Introduction
 
-TheGoldEconomy is a gold based Economy plugin that's lightweight, easy to configure and just works.
+TheGoldEconomy is a powerful economy plugin that allows servers to manage their gold-based currency through a bank system. Players can deposit and withdraw gold and send money to each other. With support for both gold nuggets, ingots and raw gold this plugin is designed to be lightweight, easy to configure, and fully compatible with popular plugins like Vault and Towny.
 
 ## Table of Contents
 
 <!--ts-->
 
 - [Features](#features)
-- [Usage](#usage)
 - [How to Install](#how-to-install)
 - [Commands](#commands)
 - [Permissions](#permissions)
@@ -35,16 +34,19 @@ TheGoldEconomy is a gold based Economy plugin that's lightweight, easy to config
 
 ## How to Install
 
-- Install Vault
-- Download TheGoldEconomy jar and put it into plugins folder.
-- Enjoy playing!
+1. **Install Vault**: Ensure you have [Vault](https://www.spigotmc.org/resources/vault.34315/) installed on your server. Vault is compatible with Minecraft versions newer than 1.17.
+2. **Download TheGoldEconomy**: Get the latest version of TheGoldEconomy [here](https://modrinth.com/plugin/thegoldeconomy).
+3. **Place the Plugin**: Move the downloaded `.jar` file into your server's `plugins` folder.
+4. **Enjoy playing!**
 
 ## Commands
 
 ### Player
 
 - **/bank balance**  
-  view your Balance.
+  Shows your balance
+- /bank balance <player>
+  Shows the balance of the given player
 - **/bank deposit <gold>**  
   Deposits gold from you inventory into your account.
 - **/bank withdraw <gold>**  
@@ -52,7 +54,33 @@ TheGoldEconomy is a gold based Economy plugin that's lightweight, easy to config
 - **/bank pay <player> <gold>**  
   Pay a player gold.
 
-## Permissions:
+- **/bank balance**  
+  Displays your current bank balance (e.g, `/bank balance`).
+- **/bank balance <player>**  
+  Shows the balance of the specified player (e.g., `/bank balance Steve`).
+- **/bank deposit <gold>**  
+  Deposits the specified amount of gold from your inventory into your bank account (e.g., `/bank deposit 10`). To deposit everything use `/bank deposit` without an amount.
+- **/bank withdraw <gold>**  
+  Withdraws the specified amount of gold from your bank account into your inventory (e.g., `/bank withdraw 5`). To deposit everything use `/bank deposit` without an amount.
+- **/bank pay <player> <gold>**  
+  Transfers the specified amount of gold to another player (e.g., `/bank pay Alex 20`).
+
+## Permissions
+
+### Default Permissions
+
+- `thegoldeconomy.balance`  
+  /bank balance
+- `thegoldeconomy.balance.others`  
+  /bank balance <player>
+- `thegoldeconomy.deposit`  
+  /bank deposit
+- `thegoldeconomy.withdraw`  
+  /bank withdraw
+- `thegoldeconomy.pay`  
+  /bank pay
+
+### Non-default Permissions
 
 - `thegoldeconomy.set`  
   /bank set
@@ -69,9 +97,9 @@ The following placeholders are available if using PlaceholderAPI
 - `thegoldeconomy_bankbalance`
 - `thegoldeconomy_totalBalance`
 
-## Config File:
+## Config File
 
-```
+```yaml
 # Remove Gold Drops from Mobs like Piglins? (default: true)
 removeGoldDrop: true
 # Should the plugin check for updated? (default: true)
