@@ -29,8 +29,11 @@ class BankCommand(plugin: TheGoldEconomy) : BaseCommand() {
     @Description("{@@command.info.balance}")
     @CommandPermission("thegoldeconomy.balance")
     fun balance(commandSender: CommandSender) {
-        val player = commandSender as Player
+        val playerOptional = util.isPlayer(commandSender)
+        if (playerOptional.isEmpty) return
+        val player = playerOptional.get()
         val uuid = player.uniqueId
+
         util.sendMessageToPlayer(
             String.format(
                 bundle.getString("info.balance"),
@@ -45,7 +48,9 @@ class BankCommand(plugin: TheGoldEconomy) : BaseCommand() {
     @Description("{@@command.info.pay}")
     @CommandPermission("thegoldeconomy.pay")
     fun pay(commandSender: CommandSender, target: OfflinePlayer, amount: Int) {
-        val sender = commandSender as Player
+        val playerOptional = util.isPlayer(commandSender)
+        if (playerOptional.isEmpty) return
+        val sender = playerOptional.get()
         val senderuuid = sender.uniqueId
         val targetuuid = target.uniqueId
 
@@ -91,8 +96,11 @@ class BankCommand(plugin: TheGoldEconomy) : BaseCommand() {
     @Description("{@@command.info.deposit}")
     @CommandPermission("thegoldeconomy.deposit")
     fun deposit(commandSender: CommandSender, @Optional nuggets: String?) {
-        val player = commandSender as Player
-        val inventoryValue = eco.converter.getInventoryValue(commandSender)
+        val playerOptional = util.isPlayer(commandSender)
+        if (playerOptional.isEmpty) return
+
+        val player = playerOptional.get()
+        val inventoryValue = eco.converter.getInventoryValue(player)
 
         if (util.isBankingRestrictedToPlot(player)) {
             return
@@ -103,7 +111,7 @@ class BankCommand(plugin: TheGoldEconomy) : BaseCommand() {
                 return
             }
             util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), inventoryValue), player)
-            eco.converter.depositAll(commandSender)
+            eco.converter.depositAll(player)
             return
         }
 
@@ -123,7 +131,7 @@ class BankCommand(plugin: TheGoldEconomy) : BaseCommand() {
             util.sendMessageToPlayer(bundle.getString("error.notenough"), player)
         } else {
             util.sendMessageToPlayer(String.format(bundle.getString("info.deposit"), amount), player)
-            eco.converter.deposit(commandSender, nuggets.toInt())
+            eco.converter.deposit(player, nuggets.toInt())
         }
     }
 
@@ -131,7 +139,10 @@ class BankCommand(plugin: TheGoldEconomy) : BaseCommand() {
     @Description("{@@command.info.withdraw}")
     @CommandPermission("thegoldeconomy.withdraw")
     fun withdraw(commandSender: CommandSender, @Optional nuggets: String?) {
-        val player = commandSender as Player
+        val playerOptional = util.isPlayer(commandSender)
+        if (playerOptional.isEmpty) return
+
+        val player = playerOptional.get()
 
         if (util.isBankingRestrictedToPlot(player)) return
         if (nuggets == null || nuggets == "all") {
