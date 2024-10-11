@@ -20,3 +20,5 @@ permissions:
     default: true
   thegoldeconomy.pay:
     default: true
+  thegoldeconomy.balance.others:
+    default: true
