@@ -81,7 +81,7 @@ class BankCommand(plugin: TheGoldEconomy) : BaseCommand() {
                             amount, sender.name), Bukkit.getPlayer(target.uniqueId))
                     eco.bank.setAccountBalance(target.uniqueId, eco.bank.getTotalPlayerBalance(targetuuid) + amount)
                 } else {
-                    eco.depositPlayer(target, (eco.bank.getTotalPlayerBalance(targetuuid) + amount).toDouble())
+                    eco.depositPlayer(target, amount.toDouble())
                 }
             }
         }
