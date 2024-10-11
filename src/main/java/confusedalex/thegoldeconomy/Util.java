@@ -5,6 +5,7 @@ import com.palmergames.bukkit.towny.object.TownBlockType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -44,5 +45,14 @@ public class Util {
       }
     }
     return false;
+  }
+
+  public Optional<Player> isPlayer(CommandSender commandSender) {
+    if (commandSender instanceof Player) {
+      return Optional.of((Player) commandSender);
+    } else {
+      commandSender.sendMessage(plugin.bundle.getString("error.notaplayer"));
+      return Optional.empty();
+    }
   }
 }
