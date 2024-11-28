@@ -1,6 +1,6 @@
 # Remove Gold Drops from Mobs like Piglins? (default: true)
 removeGoldDrop: true
-# Should the plugin check for updated? (default: true)
+# Should the plugin check for updates? (default: true)
 updateCheck: true
 # Valid language are:
 # German: de_DE
