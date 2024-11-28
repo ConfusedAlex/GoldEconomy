@@ -92,11 +92,11 @@ public class Converter {
     if (value < amount)
       return;
 
-    // Deletes all gold items
     for (ItemStack item : player.getInventory()) {
       if (item == null)
         continue;
-      if (!isGold(item.getType()))
+      // If the value is zero, the item is used in the base
+      if (getValue(item.getType()) == 0)
         continue;
 
       item.setAmount(0);
