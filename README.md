@@ -45,7 +45,7 @@ TheGoldEconomy is a powerful economy plugin that allows servers to manage their 
 
 - **/bank balance**  
   Shows your balance
-- /bank balance <player>
+- **/bank balance <player>**
   Shows the balance of the given player
 - **/bank deposit <gold>**  
   Deposits gold from you inventory into your account.
