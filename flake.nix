@@ -18,6 +18,7 @@
             jdk17
             jdt-language-server
             maven
+            gradle
           ];
         };
       }
