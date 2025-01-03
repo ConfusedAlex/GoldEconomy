@@ -1,7 +1,9 @@
 {
   description = "A basic flake with a shell";
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
   outputs =
     { nixpkgs, flake-utils, ... }:
@@ -17,9 +19,6 @@
             jdt-language-server
             maven
           ];
-          # shellHook = ''
-          #
-          # '';
         };
       }
     );
