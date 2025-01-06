@@ -29,7 +29,7 @@ dependencies {
     compileOnly("com.palmergames.bukkit.towny:towny:0.98.1.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.0.20")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.1.0")
 }
 
 tasks.withType<JavaCompile> {
