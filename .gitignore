@@ -134,3 +134,7 @@ gradle-app.setting
 # Common working directory
 run/
 server*
+
+# direnv
+.envrc
+.direnv
