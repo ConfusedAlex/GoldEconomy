@@ -15,7 +15,7 @@
       {
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            jdk17
+            jdk21
             jdt-language-server
             maven
             gradle
