@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("java")
     kotlin("jvm") version "2.1.0"
@@ -15,6 +17,7 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.aikar.co/content/groups/aikar/")
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
@@ -24,21 +27,18 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 
-    compileOnly("org.spigotmc:spigot-api:1.18-rc3-R0.1-SNAPSHOT")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
+    compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("com.palmergames.bukkit.towny:towny:0.98.1.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.1.0")
-}
-
-tasks.withType<JavaCompile> {
-    options.compilerArgs.add("-parameters")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.0.0")
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
     withSourcesJar()
     withJavadocJar()
@@ -51,10 +51,23 @@ tasks {
 
     compileJava {
         options.encoding = "UTF-8"
+        options.compilerArgs.add("-parameters")
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
+    }
+
+    compileKotlin {
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
     }
 
     compileTestJava {
         options.encoding = "UTF-8"
+        sourceCompatibility = "21"
+        targetCompatibility = "21"
+    }
+
+    compileTestKotlin {
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
     }
 
     // Disable the default JAR task
@@ -71,4 +84,3 @@ tasks {
         relocate("co.aikar.locales", "confusedalex.thegoldeconomy.locales")
         archiveClassifier.set("")
     }
-}
