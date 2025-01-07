@@ -84,3 +84,4 @@ tasks {
         relocate("co.aikar.locales", "confusedalex.thegoldeconomy.locales")
         archiveClassifier.set("")
     }
+}
